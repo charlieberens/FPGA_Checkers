@@ -1,0 +1,66 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Fri Nov  8 17:43:02 2024
+[*]
+[dumpfile] "/Users/arnavajay/Documents/ECE 350/processor/Test Files/Output Files/full_control.vcd"
+[dumpfile_mtime] "Fri Nov  8 17:39:17 2024"
+[dumpfile_size] 4684926
+[savefile] "/Users/arnavajay/Documents/ECE 350/processor/Test Files/Output Files/jr_bypass.gtkw"
+[timestart] 1951100
+[size] 1288 600
+[pos] 81 19
+*-17.602804 2100000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[markername] AA
+[markername] BB
+[markername] CC
+[markername] DD
+[markername] EE
+[markername] FF
+[markername] GG
+[markername] HH
+[markername] II
+[markername] JJ
+[markername] KK
+[markername] LL
+[markername] MM
+[markername] NN
+[markername] OO
+[markername] PP
+[markername] QQ
+[markername] RR
+[markername] SS
+[markername] TT
+[markername] UU
+[markername] VV
+[markername] WW
+[markername] XX
+[markername] YY
+[markername] ZZ
+[treeopen] Wrapper_tb.
+[treeopen] Wrapper_tb.RegisterFile.
+[sst_width] 253
+[signals_width] 269
+[sst_expanded] 1
+[sst_vpaned_height] 159
+@28
+Wrapper_tb.CPU.clock
+@420
+Wrapper_tb.CPU.mainALU_in1[31:0]
+Wrapper_tb.CPU.mainALU_in2[31:0]
+Wrapper_tb.CPU.sxImmediate[31:0]
+Wrapper_tb.CPU.aluIn2_decision[31:0]
+Wrapper_tb.CPU.aluReg_out[31:0]
+@28
+Wrapper_tb.CPU.hazard
+Wrapper_tb.CPU.wren
+Wrapper_tb.CPU.data_condition
+@24
+Wrapper_tb.CPU.ctrl_writeReg[4:0]
+@22
+Wrapper_tb.CPU.data_writeReg[31:0]
+@24
+Wrapper_tb.CPU.q_dmem[31:0]
+@23
+Wrapper_tb.CPU.data[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

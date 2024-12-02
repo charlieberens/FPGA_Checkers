@@ -1,0 +1,77 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Fri Nov  1 19:57:14 2024
+[*]
+[dumpfile] "/Users/arnavajay/Documents/ECE 350/processor/Test Files/Output Files/all_control.vcd"
+[dumpfile_mtime] "Fri Nov  1 19:48:58 2024"
+[dumpfile_size] 3036214
+[savefile] "/Users/arnavajay/Documents/ECE 350/processor/Test Files/Output Files/vinny.gtkw"
+[timestart] 3830000
+[size] 1288 600
+[pos] -1 -1
+*-14.466901 3902800 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[markername] AA
+[markername] BB
+[markername] CC
+[markername] DD
+[markername] EE
+[markername] FF
+[markername] GG
+[markername] HH
+[markername] II
+[markername] JJ
+[markername] KK
+[markername] LL
+[markername] MM
+[markername] NN
+[markername] OO
+[markername] PP
+[markername] QQ
+[markername] RR
+[markername] SS
+[markername] TT
+[markername] UU
+[markername] VV
+[markername] WW
+[markername] XX
+[markername] YY
+[markername] ZZ
+[treeopen] Wrapper_tb.
+[treeopen] Wrapper_tb.CPU.
+[treeopen] Wrapper_tb.RegisterFile.genblk1[10].
+[treeopen] Wrapper_tb.RegisterFile.genblk1[20].
+[treeopen] Wrapper_tb.RegisterFile.genblk1[23].
+[treeopen] Wrapper_tb.RegisterFile.genblk1[30].
+[treeopen] Wrapper_tb.RegisterFile.genblk1[31].
+[sst_width] 253
+[signals_width] 466
+[sst_expanded] 1
+[sst_vpaned_height] 159
+@29
+Wrapper_tb.CPU.clock
+@24
+Wrapper_tb.CPU.sxImmediate[31:0]
+@28
+Wrapper_tb.CPU.ctrl_writeEnable
+@24
+Wrapper_tb.CPU.ctrl_writeReg[4:0]
+Wrapper_tb.CPU.data_writeReg[31:0]
+Wrapper_tb.CPU.aluReg2_out[31:0]
+Wrapper_tb.CPU.data1_out[31:0]
+Wrapper_tb.RegisterFile.genblk1[23].reg_result_two[31:0]
+Wrapper_tb.RegisterFile.genblk1[30].reg_result_two[31:0]
+Wrapper_tb.CPU.progCount_out[31:0]
+@22
+Wrapper_tb.CPU.fourthIR_out[31:0]
+@28
+Wrapper_tb.CPU.ovflow_det2
+@24
+Wrapper_tb.CPU.address_imem[31:0]
+@28
+Wrapper_tb.CPU.firstIR_in[31:0]
+Wrapper_tb.CPU.firstIR_out[31:0]
+Wrapper_tb.CPU.secondIR_in[31:0]
+Wrapper_tb.CPU.secondIR_out[31:0]
+Wrapper_tb.CPU.branch
+[pattern_trace] 1
+[pattern_trace] 0

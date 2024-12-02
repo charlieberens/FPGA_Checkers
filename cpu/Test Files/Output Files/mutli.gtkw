@@ -1,0 +1,81 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Sat Nov  2 15:02:10 2024
+[*]
+[dumpfile] "/Users/arnavajay/Documents/ECE 350/processor/Test Files/Output Files/mut_basic.vcd"
+[dumpfile_mtime] "Sat Nov  2 15:01:44 2024"
+[dumpfile_size] 5026152
+[savefile] "/Users/arnavajay/Documents/ECE 350/processor/Test Files/Output Files/mutli.gtkw"
+[timestart] 327800
+[size] 1288 600
+[pos] -1 -1
+*-17.263060 308000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[markername] AA
+[markername] BB
+[markername] CC
+[markername] DD
+[markername] EE
+[markername] FF
+[markername] GG
+[markername] HH
+[markername] II
+[markername] JJ
+[markername] KK
+[markername] LL
+[markername] MM
+[markername] NN
+[markername] OO
+[markername] PP
+[markername] QQ
+[markername] RR
+[markername] SS
+[markername] TT
+[markername] UU
+[markername] VV
+[markername] WW
+[markername] XX
+[markername] YY
+[markername] ZZ
+[treeopen] Wrapper_tb.
+[sst_width] 253
+[signals_width] 185
+[sst_expanded] 1
+[sst_vpaned_height] 159
+@28
+Wrapper_tb.CPU.clock
+@24
+Wrapper_tb.CPU.progCount_out[31:0]
+@22
+Wrapper_tb.CPU.q_imem[31:0]
+Wrapper_tb.CPU.firstIR_out[31:0]
+Wrapper_tb.CPU.secondIR_out[31:0]
+Wrapper_tb.CPU.thirdIR_out[31:0]
+Wrapper_tb.CPU.fourthIR_out[31:0]
+@c00024
+Wrapper_tb.CPU.ctrl_writeReg[4:0]
+@28
+(0)Wrapper_tb.CPU.ctrl_writeReg[4:0]
+(1)Wrapper_tb.CPU.ctrl_writeReg[4:0]
+(2)Wrapper_tb.CPU.ctrl_writeReg[4:0]
+(3)Wrapper_tb.CPU.ctrl_writeReg[4:0]
+(4)Wrapper_tb.CPU.ctrl_writeReg[4:0]
+@1401200
+-group_end
+@420
+Wrapper_tb.CPU.data1_out[31:0]
+Wrapper_tb.CPU.data2_out[31:0]
+Wrapper_tb.CPU.data_writeReg[31:0]
+@28
+Wrapper_tb.CPU.isMult
+Wrapper_tb.CPU.stall_mult
+@420
+Wrapper_tb.CPU.multDivRes[31:0]
+@28
+Wrapper_tb.CPU.ctrl_mult
+Wrapper_tb.CPU.data_rdy
+Wrapper_tb.CPU.isDiv
+Wrapper_tb.CPU.ctrl_div
+@29
+Wrapper_tb.CPU.stall_div
+[pattern_trace] 1
+[pattern_trace] 0
