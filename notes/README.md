@@ -2,6 +2,12 @@
 
 ## Usage
 
+Assemble with the following
+
+```sh
+./assembler/asm -o <output> -i instructions.csv -r aliases.csv <input>
+```
+
 ## Implementation
 
 ### Conventions
