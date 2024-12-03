@@ -5,23 +5,22 @@ module sur(
     input[31:0] A
 );
 // Set the left border
-assign A_shifted[0] = 1'b1;
 assign A_shifted[4] = 1'b1;
-assign A_shifted[8] = 1'b1;
 assign A_shifted[12] = 1'b1;
-assign A_shifted[16] = 1'b1;
 assign A_shifted[20] = 1'b1;
-assign A_shifted[24] = 1'b1;
 
 // Set the bottom border
-assign A_shifted[28:31] = 4'b1111;
+assign A_shifted[31:28] = 4'b1111;
 
 // Set the rest
-assign A_shifted[1:3] = A[4:6];
-assign A_shifted[5:7] = A[8:10];
-assign A_shifted[9:11] = A[12:14];
-assign A_shifted[13:15] = A[16:18];
-assign A_shifted[17:19] = A[20:22];
-assign A_shifted[21:23] = A[24:26];
-assign A_shifted[25:27] = A[28:30];
+assign A_shifted[3:0] = A[7:4];
+assign A_shifted[7:5] = A[10:8];
+
+assign A_shifted[11:8] = A[15:12];
+assign A_shifted[15:13] = A[18:16];
+
+assign A_shifted[19:16] = A[23:20];
+assign A_shifted[23:21] = A[26:24];
+
+assign A_shifted[27:24] = A[31:28];
 endmodule

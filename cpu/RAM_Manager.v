@@ -5,5 +5,5 @@ module RAMManager (
     input wire [31:0] sensorDataOut,
     output wire [31:0] dataOut);
 
-assign dataOut = (addr == 32'h10000000) ? sensorDataOut : RAMDataOut
+assign dataOut = (addr == 32'h10000000) ? sensorDataOut : RAMDataOut;
 endmodule

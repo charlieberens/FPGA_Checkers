@@ -39,3 +39,7 @@
 ./cpu/ALU/mux_2.v
 ./cpu/ALU/sll_1.v
 ./cpu/ALU/sr_arithmetic.v
+./cpu/Sensor_Manager.v
+./cpu/sul.v
+./cpu/sur.v
+./cpu/RAM_Manager.v

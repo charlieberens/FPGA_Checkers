@@ -76,10 +76,10 @@ module processor(
     localparam[4:0] setx = 5'b10101;
     localparam[4:0] bex = 5'b10110;
 
-    localparam[4:0] sur = 5'10000; // Shift up right - I type
-    localparam[4:0] sul = 5'10001; // Shift up left - I type
-    localparam[4:0] sura = 5'11000; // rd = rs & sur(rt) - R type
-    localparam[4:0] sula = 5'11001; // rd = rs & sul(rt) - R type
+    localparam[4:0] sur = 5'b10000; // Shift up right - I type
+    localparam[4:0] sul = 5'b10001; // Shift up left - I type
+    localparam[4:0] sura = 5'b11000; // rd = rs & sur(rt) - R type
+    localparam[4:0] sula = 5'b11001; // rd = rs & sul(rt) - R type
 
     localparam [31:0] nop = 32'b0;
 
@@ -156,18 +156,18 @@ module processor(
     multdiv mainMult(mainALU_in1, aluIn2_decision, ctrl_mult, ctrl_div, ~clock, multDivRes, data_exp, data_rdy);
 
     // Handle shift up
-    assign wire is_anded_su = secondIR_out[30]; // Check if it's sula or sura
-    assign wire su_direction = secondIR_out[27];
-    assign wire is_su = secondIR_out[31] && !secondIR_out[29] && !secondIR_out[28];
+    wire is_anded_su = secondIR_out[30]; // Check if it's sula or sura
+    wire su_direction = secondIR_out[27];
+    wire is_su = secondIR_out[31] && !secondIR_out[29] && !secondIR_out[28];
 
-    wire [31,0] sur_result, sul_result, sura_result, sula_result, fin_su_result;
-    sur test_sur(sur_result, is_anded_su ? data_operandB : data_operandA);
-    sul test_sul(sul_result, is_anded_su ? data_operandB : data_operandA);
-    assign wire [31:0] fin_su_simple_result = direction ? sur_result : sul_result;
+    wire [31:0] sur_result, sul_result, sura_result, sula_result, fin_su_result;
+    sur test_sur(sur_result, is_anded_su ? mainALU_in2 : mainALU_in1);
+    sul test_sul(sul_result, is_anded_su ? mainALU_in2 : mainALU_in1);
+    wire [31:0] fin_su_simple_result = su_direction ? sur_result : sul_result;
     
-    assign sura_result = data_operandA & sur_result;
-    assign sula_result = data_operandA & sul_result;
-    assign wire [31:0] fin_sua_result = direction ? sura_result : sula_result;
+    assign sura_result = mainALU_in1 & sur_result;
+    assign sula_result = mainALU_in1 & sul_result;
+    wire [31:0] fin_sua_result = su_direction ? sura_result : sula_result;
 
     assign fin_su_result = is_anded_su ? fin_sua_result : fin_su_simple_result;
     assign true_result = is_su ? fin_su_result : ((isDiv || isMult) ? multDivRes : mainALU_res);

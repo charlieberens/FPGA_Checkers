@@ -24,14 +24,17 @@
  *
  **/
 
-module Wrapper (clock, reset);
-	input clock, reset;
-
+module Wrapper (
+	input clock,
+	input reset,
+	inout[10:1] JA,
+    output[15:0] LED
+);
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
 	wire[31:0] instAddr, instData, 
 		rData, regA, regB,
-		memAddr, memDataIn, memDataOut, RAMDataOut;
+		memAddr, memDataIn, memDataOut, RAMDataOut, sensorDataOut;
 
 	// ADD YOUR MEMORY FILE HERE
 	localparam INSTR_FILE = "";
@@ -70,12 +73,19 @@ module Wrapper (clock, reset);
 		.addr(memAddr[11:0]), 
 		.dataIn(memDataIn), 
 		.dataOut(RAMDataOut));
+
+	SensorManager sensor_manager(
+		.sensorDataOut(sensorDataOut),
+		.JA(JA),
+		.clk(clock),
+		.LED(LED)
+	);
 	
 	RAMManager ram_manager(
 		.addr(memAddr),
 		.RAMDataOut(RAMDataOut),
-		.sensorDataOut(),
+		.sensorDataOut(sensorDataOut),
 		.dataOut(memDataOut)
-	)
+	);
 
 endmodule

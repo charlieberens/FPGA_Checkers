@@ -12,8 +12,11 @@ Find pieces that could theoretically move down left:
     -   Find which of these are fully obstructed: `my_fully_opp_obstruct_pieces = my_semi_opp_obstruct_pieces & their_pieces_shift_up_right_2x`
     -   Find takes: `my_take_pieces = my_semi_opp_obstruct_pieces - my_fully_opp_obstruct_pieces`
     -   `if my_take_pieces != 0`
+        -   Set `only_takes = 1`
         -   Choose First Legal Move from my_take_pieces: `j choose_first_legal_move(my_semi_opp_obstruct_pieces, 0)`
     -   `set wait = 1`
+    -   `if only_takes: j A`
+    -   Set `only_takes = 0`
     -   `if my_fully_free_pieces != 0`
         -   Choose first legal move from my_fully_free_pieces: `j choose_first_legal_move(my_fully_free_pieces, 0)`
 
