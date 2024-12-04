@@ -1,0 +1,42 @@
+Cycle   9: Wrote 255 into register 1
+Cycle  10: Wrote 4278190080 into register 1
+Cycle  11: Wrote 4278190335 into register 1
+Cycle  12: Wrote 4293984527 into register 2
+Cycle  13: Wrote 4293951631 into register 3
+Cycle  14: Wrote 982768 into register 4
+Cycle  15: Wrote 1015664 into register 5
+Cycle  16: Wrote 240 into register 6
+Cycle  17: Wrote 112 into register 7
+============== Testing Mode ==============
+Reg  0:           0
+Reg  1:  4278190335
+Reg  2:  4293984527
+Reg  3:  4293951631
+Reg  4:      982768
+Reg  5:     1015664
+Reg  6:         240
+Reg  7:         112
+Reg  8:           0
+Reg  9:           0
+Reg 10:           0
+Reg 11:           0
+Reg 12:           0
+Reg 13:           0
+Reg 14:           0
+Reg 15:           0
+Reg 16:           0
+Reg 17:           0
+Reg 18:           0
+Reg 19:           0
+Reg 20:           0
+Reg 21:           0
+Reg 22:           0
+Reg 23:           0
+Reg 24:           0
+Reg 25:           0
+Reg 26:           0
+Reg 27:           0
+Reg 28:           0
+Reg 29:           0
+Reg 30:           0
+Reg 31:           0

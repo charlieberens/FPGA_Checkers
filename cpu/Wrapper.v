@@ -25,11 +25,12 @@
  **/
 
 module Wrapper (
-	input clock,
+	input CLK20MHZ,
 	input reset,
 	inout[10:1] JA,
     output[15:0] LED
 );
+	wire clock = CLK20MHZ;
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
 	wire[31:0] instAddr, instData, 
@@ -37,7 +38,7 @@ module Wrapper (
 		memAddr, memDataIn, memDataOut, RAMDataOut, sensorDataOut;
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "";
+	localparam INSTR_FILE = "Test\ Files/Memory\ Files/bex_bypass";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 
@@ -80,7 +81,6 @@ module Wrapper (
 		.clk(clock),
 		.LED(LED)
 	);
-	
 	RAMManager ram_manager(
 		.addr(memAddr),
 		.RAMDataOut(RAMDataOut),

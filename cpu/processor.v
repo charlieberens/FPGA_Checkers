@@ -64,23 +64,8 @@ module processor(
 
 	/* YOUR CODE STARTS HERE */
 
-    localparam [4:0] addi = 5'b00101;
-    localparam [4:0] bne = 5'b00010;
-    localparam [4:0] blt = 5'b00110;
-    localparam [4:0] sw = 5'b00111;
-    localparam [4:0] lw = 5'b01000;
-
-    localparam [4:0] j = 5'b00001;
-    localparam [4:0] jal = 5'b00011;
-    localparam [4:0] jr = 5'b00100;
-    localparam[4:0] setx = 5'b10101;
-    localparam[4:0] bex = 5'b10110;
-
-    localparam[4:0] sur = 5'b10000; // Shift up right - I type
-    localparam[4:0] sul = 5'b10001; // Shift up left - I type
-    localparam[4:0] sura = 5'b11000; // rd = rs & sur(rt) - R type
-    localparam[4:0] sula = 5'b11001; // rd = rs & sul(rt) - R type
-
+    localparam [4:0] addi = 5'b00101; localparam [4:0] bne = 5'b00010; localparam [4:0] blt = 5'b00110; localparam [4:0] sw = 5'b00111; localparam [4:0] lw = 5'b01000;
+    localparam [4:0] j = 5'b00001; localparam [4:0] jal = 5'b00011; localparam [4:0] jr = 5'b00100; localparam[4:0] setx = 5'b10101; localparam[4:0] bex = 5'b10110;
     localparam [31:0] nop = 32'b0;
 
     wire [31:0] progCount_in, progCount_out, temp, pcAddResult, firstIR_out, firstPC_out, secondIn_out, pc_plus, aluReg_in, jumpType_pc, updated_pc, thirdIR_mod, alu_res_withovflow, aluIn2_decision;
@@ -90,6 +75,13 @@ module processor(
     wire useless, branch, noteq, lessthan, ovflow, ovflow_add, ovflow_addi, ovflow_sub, ovflow_det1, ovflow_det2;
     wire stall_mult, stall_div, stall, ctrl_mult, ctrl_div, ctrl_mult_temp, ctrl_div_temp, data_rdy, data_exp, isMult, isDiv, ovflow_mul, ovflow_div, hazard, dx_load_cond, fd_load_cond, data_condition;
     wire [4:0] destReg, sReg, tReg, aluOP, dReg, branch_op, sReg_two, prev_RegA, prev_RegB, tReg_two, dReg_two;
+    //assign branch = 1'b0; // to be changed later
+    //assign temp = 32'b0; // to be changed later
+    //assign valid_args = firstIR_out[31:27]!=jal && firstIR_out[31:27]!=j && secondIR_out[31:27]!=j
+    // assign hazard = ((ctrl_readRegA == secondIR_out[26:22]) && secondIR_out[26:22]!=5'b0) || 
+    //                 ((ctrl_readRegB == secondIR_out[26:22]) && secondIR_out[26:22]!=5'b0) || 
+    //                 ((ctrl_readRegA == thirdIR_out[26:22]) && thirdIR_out[26:22]!=5'b0) || 
+    //                 ((ctrl_readRegB == thirdIR_out[26:22]) && thirdIR_out[26:22]!=5'b0);
     assign dx_load_cond = secondIR_out[31:27]==lw;
     assign fd_load_cond = firstIR_out[31:27]==sw;
     assign hazard = (dx_load_cond) && 
@@ -112,8 +104,8 @@ module processor(
     assign sReg = firstIR_out[31:27]==bex ? 5'b11110 : firstIR_out[21:17];
 	assign tReg = firstIR_out[16:12];
     assign dReg = firstIR_out[31:27]==bex ? 5'b0 : firstIR_out[26:22];
-    assign ctrl_readRegA = !(|firstIR_out[31:27]) || firstIR_out[31:27]==sw || firstIR_out[31:27]==lw || firstIR_out[31:27]==bne || firstIR_out[31:27]==blt || firstIR_out[31:27]==addi || firstIR_out[31:27]==bex || firstIR_out[31:27]==sur || firstIR_out[31:27]==sul || firstIR_out[31:27]==sura || firstIR_out[31:27]==sula ? sReg : 5'b0; // for if it is an r type or an i type
-    assign ctrl_readRegB = !(|firstIR_out[31:27]) || firstIR_out[31:27]==sura || firstIR_out[31:27]==sula ? tReg : dReg; // if it is an r type
+    assign ctrl_readRegA = !(|firstIR_out[31:27]) || firstIR_out[31:27]==sw || firstIR_out[31:27]==lw || firstIR_out[31:27]==bne || firstIR_out[31:27]==blt || firstIR_out[31:27]==addi || firstIR_out[31:27]==bex ? sReg : 5'b0; // for if it is an r type or an i type
+    assign ctrl_readRegB = !(|firstIR_out[31:27]) ? tReg : dReg; // if it is an r type
 
     assign secondIR_in = branch || hazard ? nop : firstIR_out;
 
@@ -132,8 +124,8 @@ module processor(
     assign sReg_two = secondIR_out[31:27]==bex ? 5'b11110 : secondIR_out[21:17];  
     assign tReg_two = secondIR_out[16:12];
     assign dReg_two = secondIR_out[31:27]==bex ? 5'b0 : secondIR_out[26:22];
-    assign prev_RegA = !(|secondIR_out[31:27]) || secondIR_out[31:27]==sw || secondIR_out[31:27]==lw || secondIR_out[31:27]==bne || secondIR_out[31:27]==blt || secondIR_out[31:27]==addi || secondIR_out[31:27]==bex || secondIR_out[31:27]==sur || secondIR_out[31:27]==sul || secondIR_out[31:27]==sura || secondIR_out[31:27]==sula ? sReg_two : 5'b0; // for if it is an r type or an i type
-    assign prev_RegB = !(|secondIR_out[31:27]) || secondIR_out[31:27]==sura || secondIR_out[31:27]==sula ? tReg_two : dReg_two;
+    assign prev_RegA = !(|secondIR_out[31:27]) || secondIR_out[31:27]==sw || secondIR_out[31:27]==lw || secondIR_out[31:27]==bne || secondIR_out[31:27]==blt || secondIR_out[31:27]==addi || secondIR_out[31:27]==bex ? sReg_two : 5'b0; // for if it is an r type or an i type
+    assign prev_RegB = !(|secondIR_out[31:27]) ? tReg_two : dReg_two;
 
     // assign aluIn2_decision = (prev_RegB==fourthIR_out[26:22] && fourthIR_out[26:22]!=5'b0 && fourthIR_out[31:27]!=sw) ? (data_writeReg) : ((prev_RegB==thirdIR_out[26:22] && thirdIR_out[26:22]!=5'b0 && thirdIR_out[31:27]!=sw) ? (aluReg_out) : (data2_out)); //try ternary within a ternary
     assign aluIn2_decision = ((prev_RegB==thirdIR_out[26:22] || (prev_RegB==5'b11110 && ovflow_det1)) && thirdIR_out[26:22]!=5'b0 && thirdIR_out[31:27]!=sw && thirdIR_out[31:27]!=blt && thirdIR_out[31:27]!=bne) ? (aluReg_out) : (((prev_RegB==fourthIR_out[26:22] || (prev_RegB==5'b11110 && ovflow_det2)) && fourthIR_out[26:22]!=5'b0 && fourthIR_out[31:27]!=sw && fourthIR_out[31:27]!=blt && fourthIR_out[31:27]!=bne) ? (data_writeReg) : (data2_out)); //try ternary within a ternary
@@ -155,22 +147,7 @@ module processor(
 
     multdiv mainMult(mainALU_in1, aluIn2_decision, ctrl_mult, ctrl_div, ~clock, multDivRes, data_exp, data_rdy);
 
-    // Handle shift up
-    wire is_anded_su = secondIR_out[30]; // Check if it's sula or sura
-    wire su_direction = secondIR_out[27];
-    wire is_su = secondIR_out[31] && !secondIR_out[29] && !secondIR_out[28];
-
-    wire [31:0] sur_result, sul_result, sura_result, sula_result, fin_su_result;
-    sur test_sur(sur_result, is_anded_su ? mainALU_in2 : mainALU_in1);
-    sul test_sul(sul_result, is_anded_su ? mainALU_in2 : mainALU_in1);
-    wire [31:0] fin_su_simple_result = su_direction ? sur_result : sul_result;
-    
-    assign sura_result = mainALU_in1 & sur_result;
-    assign sula_result = mainALU_in1 & sul_result;
-    wire [31:0] fin_sua_result = su_direction ? sura_result : sula_result;
-
-    assign fin_su_result = is_anded_su ? fin_sua_result : fin_su_simple_result;
-    assign true_result = is_su ? fin_su_result : ((isDiv || isMult) ? multDivRes : mainALU_res);
+    assign true_result = isDiv || isMult ? multDivRes : mainALU_res;
 
     dffe_ref stallMult(stall_mult, isMult, clock, 1'b1, data_rdy);
     dffe_ref cntrlMult(ctrl_mult_temp, isMult, clock, 1'b1, reset);
@@ -197,24 +174,19 @@ module processor(
 
     assign alu_res_withovflow = !(ovflow_add || ovflow_addi || ovflow_sub || ovflow_mul || ovflow_div || secondIR_out[31:27] == setx) ? true_result : 32'bz;
 
+
     assign aluReg_in = secondIR_out[31:27]==jal ? pc_plus : alu_res_withovflow;
 
     register thirdIR(clock, ~stall, secondIR_out, reset, thirdIR_out);
     register aluOut(clock, ~stall, aluReg_in, reset, aluReg_out);
     register secondInput(clock, ~stall, aluIn2_decision, reset, secondIn_out);
-    dffe_ref firstOvflowDetect(
-        ovflow_det1,
-        (ovflow_add || ovflow_addi || ovflow_sub || ovflow_mul || ovflow_div || (secondIR_out[31:27] == setx)),
-        clock,
-        ~stall,
-        reset
-    );
+    dffe_ref firstOvflowDetect(ovflow_det1, (ovflow_add || ovflow_addi || ovflow_sub || ovflow_mul || ovflow_div || (secondIR_out[31:27] == setx)), clock, ~stall, reset);
 
     /****** Memory stage ******/
 
     assign wren = thirdIR_out[31:27]==sw ? 1'b1 : 1'b0;
     assign address_dmem = aluReg_out;
-    assign data_condition = (!(|fourthIR_out[31:27]) || fourthIR_out[31:27]==addi || fourthIR_out[31:27]==sur || fourthIR_out[31:27]==sul || fourthIR_out[31:27]==sura || fourthIR_out[31:27]==sula || fourthIR_out[31:27]==lw || fourthIR_out[31:27]==jal) && (fourthIR_out[26:22]==thirdIR_out[26:22]) && thirdIR_out[31:27]==sw;// We only bypass at this stage if the instruction at this stage is sw and the next stage is rd manipulating
+    assign data_condition = (!(|fourthIR_out[31:27]) || fourthIR_out[31:27]==addi || fourthIR_out[31:27]==lw || fourthIR_out[31:27]==jal) && (fourthIR_out[26:22]==thirdIR_out[26:22]) && thirdIR_out[31:27]==sw;// We only bypass at this stage if the instruction at this stage is sw and the next stage is rd manipulating
     assign data = data_condition ? data_writeReg : secondIn_out;
 
     // change the alu to include offset for the lw and sw instructions
@@ -225,7 +197,7 @@ module processor(
     dffe_ref secondOvflowDetect(ovflow_det2, ovflow_det1, clock, ~stall, reset);
     /****** Writeback stage ******/
 
-    assign data_writeReg = !(|fourthIR_out[31:27]) || fourthIR_out[31:27]==addi || fourthIR_out[31:27]==sur || fourthIR_out[31:27]==sul || fourthIR_out[31:27]==sula || fourthIR_out[31:27]==sura || fourthIR_out[31:27]==jal || fourthIR_out[31:27]==setx ? aluReg2_out : dmemReg_out;
+    assign data_writeReg = !(|fourthIR_out[31:27]) || fourthIR_out[31:27]==addi || fourthIR_out[31:27]==jal || fourthIR_out[31:27]==setx ? aluReg2_out : dmemReg_out;
     assign ctrl_writeEnable = (!(|fourthIR_out[31:27]) || fourthIR_out[31:27]==lw || fourthIR_out[31:27]==addi || fourthIR_out[31:27]==jal || fourthIR_out[31:27]==setx) ? 1'b1 : 1'b0;
     //assign ctrl_writeReg = fourthIR_out[31:27]==jal ? 5'b11111 : fourthIR_out[26:22];
     assign ctrl_writeReg = fourthIR_out[31:27]==jal ? 5'b11111 : 32'bz;

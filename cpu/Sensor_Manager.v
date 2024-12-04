@@ -27,7 +27,7 @@ end
 
 always @(posedge clk) begin
     i = i + 1;
-    if(i[0:5] == 6'b111111) begin
+    if (i[0:5] == 6'b111111) begin
         sr_clk = ~sr_clk;
 
         if(i >= 32'd6000) begin
