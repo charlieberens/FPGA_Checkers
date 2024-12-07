@@ -44,8 +44,8 @@ We do a little memory mapped IO sort of a thing. Reading from `0x10000000` will 
 
 | Location | Function                                           | Usage     |
 | -------- | -------------------------------------------------- | --------- |
-| `0x1000` | Latest Sensor Reading                              | Read Only |
-| `0x1001` | Is it time for the computer to move?               | Read Only |
+| `0x1000` | Status Register. 0 for all good.                   | R/W       |
+| `0x1001` | Latest Sensor Reading                              | Read Only |
 | `0x1002` | Connects to the LED Player piece Location Register | R/W       |
 | `0x1003` | Connects to the LED CPU piece Location Register    | R/W       |
 | `0x1004` | Connects to the LED king Location Register         | R/W       |

@@ -7,25 +7,24 @@ module MemoryManager (
     output wire [31:0] playerBoardOut,
     output wire [31:0] cpuBoardOut,
     output wire [31:0] kingBoardOut,
-    input wire [31:0] computerTurnIn,
+    output wire [31:0] statusOut,
     input wire [31:0] sensorBoardIn,
-    input wire computerTurnWEn,
 );
 
 wire [31:0] computerTurnOut, sensorBoardOut, ramDataOut;
+register Status(
+    .clock(clock),
+    .in_en(wEn && addr[15:0] == 16'h1000),
+    .data_in(dataIn),
+    .clr(reset),
+    .data_out(statusOut)
+);
 register SensorBoard(
     .clock(clock),
     .in_en(1'b1),
     .data_in(sensorBoardIn),
     .clr(reset),
     .data_out(sensorBoardOut)
-);
-register ComputerTurn(
-    .clock(clock),
-    .in_en((wEn && addr[15:0] == 16'h1001) || computerTurnWEn),
-    .data_in(computerTurnWEn ? computerTurnIn : dataIn),
-    .clr(reset),
-    .data_out(computerTurnOut)
 );
 register PlayerBoard(
     .clock(clock),
@@ -54,5 +53,5 @@ RAM ProcMem(.clk(clock),
     .dataIn(dataIn), 
     .dataOut(ramDataOut));
 
-assign dataOut = (addr == 32'h1000) ? sensorBoardOut : (addr == 32'h1001) ? computerTurnOut : (addr == 32'h1002) ? playerBoardOut : (addr == 32'h1003) ? cpuBoardOut : (addr == 32'h1004) ? kingBoardOut : ramDataOut;
+assign dataOut = (addr == 32'h1000) ? statusOut : (addr == 32'h1001) ? sensorDataOut : (addr == 32'h1002) ? playerBoardOut : (addr == 32'h1003) ? cpuBoardOut : (addr == 32'h1004) ? kingBoardOut : ramDataOut;
 endmodule

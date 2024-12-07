@@ -7,27 +7,55 @@ nop
 addi $s0, $0, 1
 sll $s0, $s0, 7
 
+j initialize_cpu_pieces
+
 ##########################################
 # Initialize CPU Pieces, and King
 ##########################################
 
+check_non_zero:
+    j $ra
+
 initialize_cpu_pieces:
     # Initialize CPU pieces
-    addi $cpub, $0, 255
+    addi $cpub, $0, 5095
     sll $cpub, $cpub, 24
 
-    # Write these to the opponent led register
-    sw $cpub, 2($s0)
+    # Write these to the CPU led register
+    sw $cpub, 3($s0)
+
+    # Initialize Player pieces
+    addi $playerb, $0, 5095
+
+    # Write these to the player led register
+    sw $playerb, 2($s0)
 
     # Write the blank king bitmap to the LED king register
     addi $kingb, $0, 0
-    sw $kingb, 3($s0) 
+    sw $kingb, 4($s0)
 
-    ##########################################
-    # while(it is time for the player_to move)
-    #   check is it time for the computer to move
-    ##########################################
+    # Ensure that sensor readings == $playerb | $cpub
+    # That is (sensor readings) & ($playerb | $cpub)  == 0
+    # Store the sensor readings into $t0
+    sw $t0, 0($s0)
+    or $t1, $playerb, $cpub
+    bne $t0, $t1, set_error
 
+    # Clear the initialization error
+    sw $0, 0($s0)
+
+    # Wait for move
+    j waiting_for_move_loop
+
+set_initialization_error:
+    addi $t0, $0, 1
+    sw $t0, 0($s0)
+    j initialize_cpu_pieces
+
+##########################################
+# while(it is time for the player_to move)
+#   check is it time for the computer to move
+##########################################
 waiting_for_move_loop:
 
     # Store "whether it's time for the computer to move" into $t0
