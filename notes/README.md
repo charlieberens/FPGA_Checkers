@@ -24,16 +24,28 @@ We do a little memory mapped IO sort of a thing. Reading from `0x10000000` will 
 
 ### Custom Instructions
 
-| Instruction | Name               | OPCode  | Type | Description                                                              |
-| ----------- | ------------------ | ------- | ---- | ------------------------------------------------------------------------ |
-| `sur`       | Shift up Right     | `10000` | `I`  | Shifts a board state $rs up and to the right 1. Stores the result in $rd |
-| `sul`       | Shift up Left      | `10001` | `I`  | Shifts a board state $rs up and to the left 1. Stores the result in $rd  |
-| `sura`      | Shift up Right And | `11000` | `R`  | `$rd = $rs & sur($rt)`                                                   |
-| `sula`      | Shift up Left And  | `11001` | `R`  | `$rd = $rs & sul($rt)`                                                   |
+| Instruction | Name               | ALU OPCode | Type | Description                                                              |
+| ----------- | ------------------ | ---------- | ---- | ------------------------------------------------------------------------ |
+| `not`       | Bitwise Not        | `01000`    | `R`  | $rd = ~rs                                                                |
+| `sur`       | Shift up Right     | `01110`    | `R`  | Shifts a board state $rs up and to the right 1. Stores the result in $rd |
+| `sul`       | Shift up Left      | `01111`    | `R`  | Shifts a board state $rs up and to the left 1. Stores the result in $rd  |
+| `sura`      | Shift up Right And | `11110`    | `R`  | `$rd = $rs & sur($rt)`                                                   |
+| `sula`      | Shift up Left And  | `11111`    | `R`  | `$rd = $rs & sul($rt)`                                                   |
 
 ### Aliases
 
-| Register | Alias        | Purpose              |
-| -------- | ------------ | -------------------- |
-| `r24`    | `b_player`   | Player Board State   |
-| `r25`    | `b_computer` | Computer Board State |
+| Register | Alias     | Purpose              |
+| -------- | --------- | -------------------- |
+| `r24`    | `playerb` | Player Board State   |
+| `r25`    | `cpub`    | Computer Board State |
+| `r26`    | `kingb`   | King Board State     |
+
+### Fake Memory Locations
+
+| Location | Function                                           | Usage     |
+| -------- | -------------------------------------------------- | --------- |
+| `0x1000` | Latest Sensor Reading                              | Read Only |
+| `0x1001` | Is it time for the computer to move?               | Read Only |
+| `0x1002` | Connects to the LED Player piece Location Register | R/W       |
+| `0x1003` | Connects to the LED CPU piece Location Register    | R/W       |
+| `0x1004` | Connects to the LED king Location Register         | R/W       |

@@ -42,4 +42,4 @@
 ./Sensor_Manager.v
 ./sul.v
 ./sur.v
-./RAM_Manager.v
+./Memory_Manager.v

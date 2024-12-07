@@ -67,25 +67,29 @@ module Wrapper (
 		.ctrl_writeReg(rd),
 		.ctrl_readRegA(rs1), .ctrl_readRegB(rs2), 
 		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB));
-						
-	// Processor Memory (RAM)
-	RAM ProcMem(.clk(clock), 
-		.wEn(mwe),
-		.addr(memAddr[11:0]), 
-		.dataIn(memDataIn), 
-		.dataOut(RAMDataOut));
+	
 
+	// Processor Memory (RAM)
 	SensorManager sensor_manager(
 		.sensorDataOut(sensorDataOut),
 		.JA(JA),
 		.clk(clock),
 		.LED(LED)
 	);
-	RAMManager ram_manager(
+
+	wire[31:0] playerBoardOut, cpuBoardOut, kingBoardOut, computerTurnIn;
+	wire computerTurnWEn;
+	MemoryManager memory_manager(
+		.wEn(mwe)
 		.addr(memAddr),
-		.RAMDataOut(RAMDataOut),
-		.sensorDataOut(sensorDataOut),
+		.dataIn(memDataIn)
 		.dataOut(memDataOut)
+		.playerBoardOut(playerBoardOut),
+		.cpuBoardOut(cpuBoardOut),
+		.kingBoardOut(kingBoardOut),
+		.computerTurnIn(computerTurnIn),
+		.sensorBoardIn(sensorDataOut),
+		.computerTurnWEn(computerTurnWEn)
 	);
 
 endmodule
