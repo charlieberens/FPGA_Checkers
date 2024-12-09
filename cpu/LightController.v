@@ -1,8 +1,9 @@
 module LightController(
-    input clk,              // System Clock Input 100 MHz
+    input clk,              // System Clock Input 20 MHz
     input [31:0] playerPieces,
     input [31:0] cpuPieces,
-    input [31:0] kingPieces
+    input [31:0] kingPieces,
+    output out
 );
     // Fixed Duty Cycle for 0.9/1.25 ratio (approximately 737/1023)
     // localparam DUTY_CYCLE = 10'd737;
@@ -15,13 +16,12 @@ module LightController(
     localparam WHITE = 24'b111111111111111111111111;
     
     localparam NONE = 24'b000000000000000000000000;
+//    localparam NONE = 24'b111111110000000000000000;
     
     localparam TOTAL_BITS_IN = 32*24;
     reg [TOTAL_BITS_IN-1:0] test_bits = {16{RED, WHITE}};//{RED, WHITE, BLUE, RED, WHITE};
     wire [(2*TOTAL_BITS_IN)-1:0] adjusted_bits;
     wire [(2*TOTAL_BITS_IN)-1:0] snake_adjusted_bits;
-    
-    wire [7:0] reversed_switches = {switches[0], switches[1], switches[2], switches[3], switches[4], switches[5], switches[6], switches[7]};
     
     genvar j;
     
@@ -68,17 +68,16 @@ module LightController(
         test_bits[719:696] <= playerPieces[29] ? (kingPieces[29] ? LIGHT_BLUE : BLUE) : (cpuPieces[29] ? (kingPieces[29] ? LIGHT_RED : RED) : NONE);
         test_bits[743:720] <= playerPieces[30] ? (kingPieces[30] ? LIGHT_BLUE : BLUE) : (cpuPieces[30] ? (kingPieces[30] ? LIGHT_RED : RED) : NONE);
         test_bits[767:744] <= playerPieces[31] ? (kingPieces[31] ? LIGHT_BLUE : BLUE) : (cpuPieces[31] ? (kingPieces[31] ? LIGHT_RED : RED) : NONE);
-
     end
     
     PWMSerializer #(
         .PERIOD_WIDTH_NS(1250), // 1.25 microseconds
-        .SYS_FREQ_MHZ(100)      // 100 MHz system clock  
+        .SYS_FREQ_MHZ(100)      // 20 MHz system clock  
     ) pwm_instance (
         .clk(clk),
         .reset(1'b0),           // No reset functionality in this example
-        //.duty_cycle(DUTY_CYCLE),// Set duty cycle for 0.9 microseconds high time
+        // .duty_cycle(DUTY_CYCLE),// Set duty cycle for 0.9 microseconds high time
         .bits(adjusted_bits),
-        // .signal(lightSignal)         // Output signal
+        .signal(out)         // Output signal
     );
 endmodule

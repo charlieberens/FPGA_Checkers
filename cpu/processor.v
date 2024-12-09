@@ -75,6 +75,7 @@ module processor(
     wire useless, branch, noteq, lessthan, ovflow, ovflow_add, ovflow_addi, ovflow_sub, ovflow_det1, ovflow_det2;
     wire stall_mult, stall_div, stall, ctrl_mult, ctrl_div, ctrl_mult_temp, ctrl_div_temp, data_rdy, data_exp, isMult, isDiv, ovflow_mul, ovflow_div, hazard, dx_load_cond, fd_load_cond, data_condition;
     wire [4:0] destReg, sReg, tReg, aluOP, dReg, branch_op, sReg_two, prev_RegA, prev_RegB, tReg_two, dReg_two;
+
     //assign branch = 1'b0; // to be changed later
     //assign temp = 32'b0; // to be changed later
     //assign valid_args = firstIR_out[31:27]!=jal && firstIR_out[31:27]!=j && secondIR_out[31:27]!=j

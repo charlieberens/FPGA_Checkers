@@ -10,11 +10,11 @@ module PWMSerializer #(
     PERIOD_WIDTH_NS = 1000,  // Total width of the period in nanoseconds
     SYS_FREQ_MHZ   = 100     // Base FPGA Clock in MHz; Nexys A7 uses a 100 MHz Clock
     )(
-    input clk,              // System Clock
-    input reset,            // Reset the counter
-    //input [9:0] duty_cycle, // Duty Cycle of the Wave, between 0 and 1023 - scaled to 0 and 100
-    input [1535:0] bits,
-    output reg signal = 0   // Output PWM signal
+        input clk,              // System Clock
+        input reset,            // Reset the counter
+        //input [9:0] duty_cycle, // Duty Cycle of the Wave, between 0 and 1023 - scaled to 0 and 100
+        input [1535:0] bits,
+        output reg signal = 0   // Output PWM signal
     );
     
     // Convert PULSE_WIDTH_NS to clock cycles
@@ -24,8 +24,9 @@ module PWMSerializer #(
     localparam PULSE_BITS   = $clog2(PERIOD) + 1;
     
     // Counter to track pulse timing
+    // reg[9:0] duty_cycle = bits[num_bits] ? 10'd737 : 10'd286;
+    reg[9:0] duty_cycle;
     reg[PULSE_BITS-1:0] pulseCounter = 0;
-    reg[9:0] duty_cycle = bits[num_bits] ? 10'd737 : 10'd286;
     reg[10:0] cycle_count = 0;
     reg delay = 0;
     always @(posedge clk or posedge reset) begin

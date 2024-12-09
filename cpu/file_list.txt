@@ -43,3 +43,6 @@
 ./sul.v
 ./sur.v
 ./Memory_Manager.v
+./LightController.v
+./PWMSerializer.v
+./Wrapper_tb_2.v

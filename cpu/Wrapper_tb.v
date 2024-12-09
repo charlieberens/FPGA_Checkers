@@ -246,8 +246,9 @@ module Wrapper_tb #(parameter FILE = "nop");
 			$display("\nFinished %0d cycle%c with %0d error%c", cycles, "s"*(cycles != 1), errors, "s"*(errors != 1));
 		else 
 			$display("Finished %0d cycle%c", cycles, "s"*(cycles != 1));
-
+		
 		#100;
 		$finish;
+
 	end
 endmodule

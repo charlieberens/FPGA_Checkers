@@ -1,4 +1,3 @@
-`timescale 1ns / 1ps
 /**
  * 
  * READ THIS DESCRIPTION:
@@ -25,12 +24,32 @@
  **/
 
 module Wrapper (
-	input CLK20MHZ,
-	input reset,
-	inout[10:1] JA,
-    output[15:0] LED
+	input CLK100MHZ,
+	input fake_clock,
+	input[15:0] SW,
+	output[15:0] LED,
+	output JA_1,
+	output JA_2,
+	input JA_3,
+	output JA_4
 );
-	wire clock = CLK20MHZ;
+    wire reset = 1'b0;
+    wire CLK20MHZ, locked;
+//    clk_wiz_0  pll
+//     (
+//      // Clock out ports
+//      .clk_out1(CLK20MHZ),
+//      // Status and control signals
+//      .reset(reset),
+//      .locked(locked),
+//     // Clock in ports
+//      .clk_in1(CLK100MHZ)
+//     );
+	// assign CLK20MHZ = CLK100MHZ;
+    
+	wire clock = CLK100MHZ;
+	// wire clock = fake_clock;
+	// wire clock = CLK100MHZ;
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
 	wire[31:0] instAddr, instData, 
@@ -38,7 +57,7 @@ module Wrapper (
 		memAddr, memDataIn, memDataOut, RAMDataOut, sensorDataOut;
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "Test\ Files/Memory\ Files/bex_bypass";
+	localparam INSTR_FILE = "MMIO_test";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 
@@ -68,32 +87,44 @@ module Wrapper (
 		.ctrl_readRegA(rs1), .ctrl_readRegB(rs2), 
 		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB));
 	
-
 	wire[31:0] playerBoardOut, cpuBoardOut, kingBoardOut, statusOut;
 	SensorManager sensorManager(
 		.sensorDataOut(sensorDataOut),
-		.JA(JA),
 		.clk(clock),
-		.LED(LED)
+		// .led(LED),
+		.sr_clk_wire(JA_1),
+		.parallel_mode_wire(JA_2),
+		.in_val(JA_3)
 	);
+	assign LED = SW[0] ? playerBoardOut[15:0] : SW[1] ? cpuBoardOut[15:0] :  SW[2] ? kingBoardOut[15:0] : instAddr[15:0];
+	// always @(playerBoardOut, cpuBoardOut, kingBoardOut, statusOut) begin
+	// 	$display("%b %b %b %b", playerBoardOut, cpuBoardOut, kingBoardOut, statusOut);
+	// end
 	LightController lightController(
 		.clk(clock),
-		.playerPieces(playerBoardOut),
+		// .clk(CLK100MHZ),
+		 .playerPieces(playerBoardOut),
 		.cpuPieces(cpuBoardOut),
+//		.cpuPieces(32'b00000000000000000000000000000000),
 		.kingPieces(kingBoardOut),
+//		.playerPieces(32'b00110000000000000000010000000000),
+//		.cpuPieces(32'b0),
+//		.kingPieces(32'b00000000000000000000000000000000),
+		.out(JA_4)
 	);
 
 	MemoryManager memoryManager(
-		.wEn(mwe)
+		.clock(CLK100MHZ),
+		.reset(reset),
+		.wEn(mwe),
 		.addr(memAddr),
-		.dataIn(memDataIn)
-		.dataOut(memDataOut)
+		.dataIn(memDataIn),
+		.dataOut(memDataOut),
 		.playerBoardOut(playerBoardOut),
 		.cpuBoardOut(cpuBoardOut),
 		.kingBoardOut(kingBoardOut),
 		.statusOut(statusOut),
-		.computerTurnIn(computerTurnIn),
-		.sensorBoardIn(sensorDataOut),
+		.sensorBoardIn(sensorDataOut)
 	);
 
 endmodule
