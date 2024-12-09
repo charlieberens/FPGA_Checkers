@@ -38,11 +38,11 @@ module alu(
 
     wire is_down = ctrl_ALUopcode[4]; // Check if it's sula or sura
 
-    sur test_sur(sur_result, is_down ? data_operandB : data_operandA);
-    sul test_sul(sul_result, is_down ? data_operandB : data_operandA);
+    sur test_sur(sur_result, data_operandA);
+    sul test_sul(sul_result, data_operandA);
     
-    sdr test_sdr(sdr_result, is_down ? data_operandB : data_operandA);
-    sdl test_sdl(sdl_result, is_down ? data_operandB : data_operandA);
+    sdr test_sdr(sdr_result, data_operandA);
+    sdl test_sdl(sdl_result, data_operandA);
 
     assign sr_result = is_down ? (sdr_result) : sur_result;
     assign sl_result = is_down ? (sdl_result) : sul_result;

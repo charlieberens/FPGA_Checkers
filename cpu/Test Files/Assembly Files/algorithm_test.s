@@ -1,6 +1,3 @@
-add $a0, $0, $0
-add $playerb, $0, $0
-add $cpub, $0, $0
 nop
 nop
 nop
@@ -34,16 +31,12 @@ sleep:
 
     jr $ra
 
-check_non_zero:
-    jr $ra
-
 initialize_cpu_pieces:
-    # Initialize CPU pieces
-    addi $cpub, $0, 4095
-    sll $cpub, $cpub, 20
-    
     addi $playerb, $0, 4095
-
+    sll $playerb, $playerb, 20
+    
+    addi $cpub, $0, 4095
+    
     addi $kingb, $0, 0
 
     jal update_leds
@@ -205,7 +198,7 @@ find_and_make_moves:
         find_piece_loop:
             and $s1, $t2, $t5
             bne $s1, $0, piece_found
-        
+
             sll $t5, $t5, 1
             addi $t6, $t6, -1
 
