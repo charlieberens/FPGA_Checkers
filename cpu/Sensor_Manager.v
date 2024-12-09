@@ -24,6 +24,8 @@ initial begin
     counter = 0;
     val_reg = 0;
     has_been_released = 1;
+
+    sensorDataOut = 32'b0;
 end
 
 always @(posedge clk) begin

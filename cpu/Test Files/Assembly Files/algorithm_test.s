@@ -1,3 +1,6 @@
+add $a0, $0, $0
+add $playerb, $0, $0
+add $cpub, $0, $0
 nop
 nop
 nop
@@ -29,27 +32,21 @@ sleep:
 
     blt $a0, $0, sleep
 
-    j ra
+    jr $ra
 
 check_non_zero:
-    j $ra
+    jr $ra
 
 initialize_cpu_pieces:
     # Initialize CPU pieces
     addi $cpub, $0, 4095
-    sll $cpub, $cpub, 24
-
-    # Write these to the CPU led register
-    sw $cpub, 3($s0)
-
-    # Initialize Player pieces
+    sll $cpub, $cpub, 20
+    
     addi $playerb, $0, 4095
 
-    # Write these to the player led register
-    sw $playerb, 2($s0)
+    addi $kingb, $0, 0
 
-    # Write the blank king bitmap to the LED king register
-    sw $kingb, 4($s0)
+    jal update_leds
 
 preparing_for_player_move:
     # Ensure that sensor readings == $playerb | $cpub
@@ -57,7 +54,9 @@ preparing_for_player_move:
     # Store the sensor readings into $t0
     lw $t0, 1($s0)
     or $t1, $playerb, $cpub
-    bne $t0, $t1, set_error
+
+    # TODO - UNCOMMENT
+    # bne $t0, $t1, set_board_state_error
 
     # Clear the initialization error
     sw $0, 0($s0)
@@ -68,6 +67,7 @@ preparing_for_player_move:
 set_board_state_error:
     addi $t0, $0, 1
     sw $t0, 0($s0)
+
     j preparing_for_player_move
 
 ##########################################
@@ -75,6 +75,7 @@ set_board_state_error:
 #   check is it time for the computer to move
 ##########################################
 waiting_for_move_loop:
+    j do_move
     # Store the old board state in $s1
     lw $s1, 1($s0)
 
@@ -117,7 +118,7 @@ update_board_from_player_move:
     not $t0, $t0, $0
     and $t0, $s1, $t0
     # Add this to the player board
-    or $playerb, $s3, $ t0
+    or $playerb, $s3, $t0
 
     # Moved player piece gap = ~sensor_reading & old_player_board
     not $t0, $s1, $0
@@ -142,26 +143,38 @@ do_move:
 
     ### Find and make any left moves
     ## Set Arguments
-    # $a0 = sur(cpub)
-    # $a1 = sur(playerb)
-    sur $a0, $cpub, $0
-    sur $a1, $playerb, $0
+    addi $a0, $0, 0
+    sw $cpub, 0($s0)
+
     jal find_and_make_moves
 
     ### Find and make any right moves
     ## Set Arguments
-    # $a0 = sul(cpub)
-    # $a1 = sul(playerb)
-    sul $a0, $cpub, $0
-    sul $a1, $playerb, $0
+    addi $a0, $0, 1
     jal find_and_make_moves
 
- # find_moves(shifted_cpub, shifted_playerb, shifted_cpub_2x, shifted_playerb_2x)
+
+ # find_moves(dir (0 left, 1 right))
 find_and_make_moves:
+    # s2 - Shifted Cpub
+    # s3 - Shifted Playerb
+    # t0 - ~Shifted Cpub
+    # t1 - ~Shifted Playerb
+
+    bne $a0, $0, find_and_make_moves_right
+    find_and_make_moves_left:
+        sur $s2, $cpub, $0
+        sur $s3, $playerb, $0
+        j find_and_make_moves_post_side
+    find_and_make_moves_right:
+        sul $s2, $cpub, $0
+        sul $s3, $playerb, $0
+    find_and_make_moves_post_side:
+
     # $t0 = ~shifted_cpub
     # $t1 = ~shifted_playerb
-    not $t0, $a0, $0
-    not $t1, $a1, $0
+    not $t0, $s2, $0
+    not $t1, $s3, $0
 
     # my_free_pieces ($t2) = $cpub & ~shifted_cpub
     and $t2, $cpub, $t0
@@ -169,8 +182,8 @@ find_and_make_moves:
     # my_fully_free_pieces ($t3) = my_free_pieces ($t2) & ~shifted_playerb ($t1)
     and $t3, $t2, $t1
 
-    # my_semi_obstruct_pieces ($t4) = my_free_pieces ($t2) & shifted_playerb ($a1)
-    and $t4, $t2, $a1
+    # my_semi_obstruct_pieces ($t4) = my_free_pieces ($t2) & shifted_playerb ($s3)
+    and $t4, $t2, $s3
 
     # TODO - Implement Jumping
 
@@ -190,19 +203,36 @@ find_and_make_moves:
         addi $t6, $0, 32
 
         find_piece_loop:
-            and $a0, $t2, $t5
-            bne $a0, $0, piece_found
+            and $s1, $t2, $t5
+            bne $s1, $0, piece_found
         
             sll $t5, $t5, 1
             addi $t6, $t6, -1
 
             bne $t6, $0, find_piece_loop
-        
+    
+    piece_found:
+    # Remove the piece from the cpu board
+    not $t5, $s1, $0
+    and $cpub, $cpub, $t5
 
+    # Add the moved piece to the cpu board
+    bne $a0, $0, is_right 
+    is_left:
+        sdl $t5, $s1, $0
+        j piece_found_post_side
+    is_right:
+        sdr $t5, $s1, $0
+    piece_found_post_side:
+    or $cpub, $cpub, $t5
 
-    # Set it_is_time_for_the_computer_to_move to 0
-    lw $0, 1($s0)
+    jal update_leds
+    j waiting_for_move_loop
 
-piece_found:
+update_leds:
+    # Write these to the CPU led register
+    sw $playerb, 2($s0)
+    sw $cpub, 3($s0)
+    sw $kingb, 4($s0)
 
-
+    jr $ra

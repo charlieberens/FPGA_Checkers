@@ -58,7 +58,7 @@ module Wrapper_tb_2 #(parameter FILE = "nop");
 	);
 
 	initial begin
-		#1000;
+		#10000;
 		$finish;
 	end
 endmodule

@@ -55,12 +55,12 @@ RAM ProcMem(.clk(clock),
     .dataIn(dataIn), 
     .dataOut(ramDataOut));
 
-always @(clock) begin
-    // $display("%b, %b, %b, %b, %b", kingBoardOut, cpuBoardOut, playerBoardOut, sensorBoardOut, statusOut);
-    if(wEn && addr[15:0] == 16'h1002) begin
-        $display("%b %x", dataIn, addr);
-    end
-end
+// always @(clock) begin
+//     // $display("%b, %b, %b, %b, %b", kingBoardOut, cpuBoardOut, playerBoardOut, sensorBoardOut, statusOut);
+//     if(wEn && addr[15:0] == 16'h1002) begin
+//         $display("%b %x", dataIn, addr);
+//     end
+// end
 
 assign dataOut = (addr == 32'h1000) ? statusOut : (addr == 32'h1001) ? sensorBoardOut : (addr == 32'h1002) ? playerBoardOut : (addr == 32'h1003) ? cpuBoardOut : (addr == 32'h1004) ? kingBoardOut : ramDataOut;
 endmodule

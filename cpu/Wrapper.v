@@ -57,7 +57,7 @@ module Wrapper (
 		memAddr, memDataIn, memDataOut, RAMDataOut, sensorDataOut;
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "MMIO_test";
+	localparam INSTR_FILE = "algorithm_test";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 
@@ -97,9 +97,9 @@ module Wrapper (
 		.in_val(JA_3)
 	);
 	assign LED = SW[0] ? playerBoardOut[15:0] : SW[1] ? cpuBoardOut[15:0] :  SW[2] ? kingBoardOut[15:0] : instAddr[15:0];
-	// always @(playerBoardOut, cpuBoardOut, kingBoardOut, statusOut) begin
-	// 	$display("%b %b %b %b", playerBoardOut, cpuBoardOut, kingBoardOut, statusOut);
-	// end
+	always @(playerBoardOut, cpuBoardOut, kingBoardOut, statusOut) begin
+		$display("%b %b %b %b", playerBoardOut, cpuBoardOut, kingBoardOut, statusOut);
+	end
 	LightController lightController(
 		.clk(clock),
 		// .clk(CLK100MHZ),

@@ -42,6 +42,8 @@
 ./Sensor_Manager.v
 ./sul.v
 ./sur.v
+./sdl.v
+./sdr.v
 ./Memory_Manager.v
 ./LightController.v
 ./PWMSerializer.v
