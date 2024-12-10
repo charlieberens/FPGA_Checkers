@@ -10,10 +10,11 @@ module MemoryManager (
     output wire [31:0] cpuBoardOut,
     output wire [31:0] kingBoardOut,
     output wire [31:0] statusOut,
-    input wire [31:0] sensorBoardIn
+    input wire [31:0] sensorBoardIn,
+    input wire buttonPressIn
 );
 
-wire [31:0] computerTurnOut, sensorBoardOut, ramDataOut;
+wire [31:0] computerTurnOut, sensorBoardOut, ramDataOut, buttonPressOut;
 register Status(
     .clk(clock),
     .in_en(wEn && addr[15:0] == 16'h1000),
@@ -49,6 +50,13 @@ register KingBoard(
     .clr(reset),
     .data_out(kingBoardOut)
 );
+register ButtonPress(
+    .clk(clock),
+    .in_en(1'b1),
+    .data_in({31'b0, buttonPressIn}),
+    .clr(reset),
+    .data_out(buttonPressOut)
+);
 RAM ProcMem(.clk(clock), 
     .wEn(wEn && !addr[12]),
     .addr(addr[11:0]), 
@@ -62,5 +70,5 @@ RAM ProcMem(.clk(clock),
 //     end
 // end
 
-assign dataOut = (addr == 32'h1000) ? statusOut : (addr == 32'h1001) ? sensorBoardOut : (addr == 32'h1002) ? playerBoardOut : (addr == 32'h1003) ? cpuBoardOut : (addr == 32'h1004) ? kingBoardOut : ramDataOut;
+assign dataOut = (addr == 32'h1000) ? statusOut : (addr == 32'h1001) ? sensorBoardOut : (addr == 32'h1002) ? playerBoardOut : (addr == 32'h1003) ? cpuBoardOut : (addr == 32'h1004) ? kingBoardOut : (addr == 32'h1005) ? buttonPressOut: ramDataOut;
 endmodule

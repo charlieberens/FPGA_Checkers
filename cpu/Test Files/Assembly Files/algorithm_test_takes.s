@@ -73,63 +73,44 @@ set_board_state_error:
 ##########################################
 waiting_for_move_loop:
     j do_move
-    # Store the old board state in $s1
-    lw $s1, 1($s0)
 
-    addi $a0, $0, 100000
-    j sleep
+    # Get updated pieces
+    jal get_updated_board_from_sensor_reading
+    
+    # Update the leds
+    add $a0, $v0, $0
+    add $a1, $v1, $0
+    add $a2, $0, $0
+    jal update_leds_w_args
 
-    # Store the new board state in $s2
-    lw $s2, 1($s0)
-
-    bne $s1, $t0, waiting_for_move_loop_continuing
+    # Check if the button is pressed
+    lw $t0, 5($s0)
+    bne $t0, $0, waiting_for_move_loop_button_has_been_pressed
     j waiting_for_move_loop
 
-    waiting_for_move_loop_continuing:
-        addi $a0, $0, 100000
-        j sleep
+    waiting_for_move_loop_button_has_been_pressed:
+        # Update the board state
+        add $playerb, $v0, $0
+        add $cpub, $v1, $0
+        add $kingb, $0, $0 # TODO - Implement kings
 
-        # Store the old board state in $s1
-        add $s1, $s2, $0
+        j do_move
 
-        # Store the new board state in $s2
-        lw $s2, 1($s0
+# This will find cpub_new and playerb_new based on a sensor reading returns (playerb_new, cpub_new)
+get_updated_board_from_sensor_reading:
+    # Player pieces = sensor_reading & ~cpub
+    lw $t0, 1($s0)
+    add $t1, $playerb, $0 
+    add $t2, $cpub, $0
 
-        # If the state has changed, we check again
-        bne $s1, $s2, waiting_for_move_loop_continuing
+    not $t3, $cpub, $0
+    and $v0, $t0, $t3
 
-        # If the state hasn't changed, the move has been made
-        j update_board_from_player_move
+    # Remove all places with no pieces
+    and $v0, $v0, $t0 
+    and $v1, $playerb, $t0 
 
-##########################################
-# Using the new sensor readings, update the board according to the players move
-##########################################
-update_board_from_player_move:
-    # Store sensor_reading in $s1, $cpub (old) in $s2, $playerb (old) in $s3
-    lw $s1, 1($s0)
-    add $s2, $cpub, $0
-    add $s3, $playerb, $0
-
-    # Moved player piece = sensor_reading & ~(old_player_board | old_cpu_board)
-    or $t0, $s2, $s3
-    not $t0, $t0, $0
-    and $t0, $s1, $t0
-    # Add this to the player board
-    or $playerb, $s3, $t0
-
-    # Moved player piece gap = ~sensor_reading & old_player_board
-    not $t0, $s1, $0
-    and $t1, $t0, $s3
-    # Remove this from the player board
-    not $t1, $t1, $0
-    and $playerb, $t1, $0
-
-    # Opponent Taken Pieces = ~sensor_reading & old_cpu_board
-    not $t0, $s1, $0
-    and $t1, $t0, $s2
-    # Remove this from the cpu board
-    not $t1, $t1, $0
-    and $cpub, $t1, $0
+    jr $ra
 
 ##########################################
 # Find pieces that could theoretically move down left
@@ -150,7 +131,6 @@ do_move:
     addi $a0, $0, 1
 
     jal find_and_make_moves
-
 
  # find_moves(dir (0 left, 1 right))
 find_and_make_moves:
@@ -292,5 +272,13 @@ update_leds:
     sw $playerb, 2($s0)
     sw $cpub, 3($s0)
     sw $kingb, 4($s0)
+
+    jr $ra
+
+# Same as update_leds but uses arguments
+update_leds_w_args:
+    sw $a0, 2($s0)
+    sw $a1, 3($s0)
+    sw $a2, 4($s0)
 
     jr $ra

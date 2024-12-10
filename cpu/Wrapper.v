@@ -31,7 +31,8 @@ module Wrapper (
 	output JA_1,
 	output JA_2,
 	input JA_3,
-	output JA_4
+	output JA_4,
+	input MoveButton
 );
     wire reset = 1'b0;
     wire CLK20MHZ, locked;
@@ -125,6 +126,7 @@ module Wrapper (
 		.kingBoardOut(kingBoardOut),
 		.statusOut(statusOut),
 		.sensorBoardIn(sensorDataOut)
+		.buttonPressIn(MoveButton)
 	);
 
 endmodule
