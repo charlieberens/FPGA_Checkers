@@ -5,6 +5,27 @@ module LightController(
     input [31:0] kingPieces,
     output out
 );
+    wire [31:0] playerPiecesRemapped, cpuPiecesRemapped, kingPiecesRemapped;
+
+    // assign playerPiecesRemapped[7:4] = {playerPieces[4], playerPieces[5], playerPieces[6], playerPieces[7]};
+    // assign playerPiecesRemapped[15:12] = {playerPieces[12], playerPieces[13], playerPieces[14], playerPieces[15]};
+    // assign playerPiecesRemapped[23:20] = {playerPieces[20], playerPieces[21], playerPieces[22], playerPieces[23]};
+    // assign playerPiecesRemapped[31:28] = {playerPieces[28], playerPieces[29], playerPieces[30], playerPieces[31]};
+
+    // assign cpuPiecesRemapped[7:4] = {cpuPieces[4], cpuPieces[5], cpuPieces[6], cpuPieces[7]};
+    // assign cpuPiecesRemapped[15:12] = {cpuPieces[12], cpuPieces[13], cpuPieces[14], cpuPieces[15]};
+    // assign cpuPiecesRemapped[23:20] = {cpuPieces[20], cpuPieces[21], cpuPieces[22], cpuPieces[23]};
+    // assign cpuPiecesRemapped[31:28] = {cpuPieces[28], cpuPieces[29], cpuPieces[30], cpuPieces[31]};
+
+    // assign kingPiecesRemapped[7:4] = {kingPieces[4], kingPieces[5], kingPieces[6], kingPieces[7]};
+    // assign kingPiecesRemapped[15:12] = {kingPieces[12], kingPieces[13], kingPieces[14], kingPieces[15]};
+    // assign kingPiecesRemapped[23:20] = {kingPieces[20], kingPieces[21], kingPieces[22], kingPieces[23]};
+    // assign kingPiecesRemapped[31:28] = {kingPieces[28], kingPieces[29], kingPieces[30], kingPieces[31]};
+
+    assign playerPiecesRemapped = playerPieces;
+    assign cpuPiecesRemapped = cpuPieces;
+    assign kingPiecesRemapped = kingPieces;
+
     // Fixed Duty Cycle for 0.9/1.25 ratio (approximately 737/1023)
     // localparam DUTY_CYCLE = 10'd737;
     localparam RED = 24'b000000001111111100000000;
@@ -36,38 +57,38 @@ module LightController(
     endgenerate
 
     always @(posedge clk) begin
-        test_bits[23:0]    <= playerPieces[0]  ? (kingPieces[0]  ? LIGHT_BLUE : BLUE) : (cpuPieces[0]  ? (kingPieces[0] ? LIGHT_RED : RED) : NONE);
-        test_bits[47:24]   <= playerPieces[1]  ? (kingPieces[1]  ? LIGHT_BLUE : BLUE) : (cpuPieces[1]  ? (kingPieces[1] ? LIGHT_RED : RED) : NONE);
-        test_bits[71:48]   <= playerPieces[2]  ? (kingPieces[2]  ? LIGHT_BLUE : BLUE) : (cpuPieces[2]  ? (kingPieces[2] ? LIGHT_RED : RED) : NONE);
-        test_bits[95:72]   <= playerPieces[3]  ? (kingPieces[3]  ? LIGHT_BLUE : BLUE) : (cpuPieces[3]  ? (kingPieces[3] ? LIGHT_RED : RED) : NONE);
-        test_bits[119:96]  <= playerPieces[4]  ? (kingPieces[4]  ? LIGHT_BLUE : BLUE) : (cpuPieces[4]  ? (kingPieces[4] ? LIGHT_RED : RED) : NONE);
-        test_bits[143:120] <= playerPieces[5]  ? (kingPieces[5]  ? LIGHT_BLUE : BLUE) : (cpuPieces[5]  ? (kingPieces[5] ? LIGHT_RED : RED) : NONE);
-        test_bits[167:144] <= playerPieces[6]  ? (kingPieces[6]  ? LIGHT_BLUE : BLUE) : (cpuPieces[6]  ? (kingPieces[6] ? LIGHT_RED : RED) : NONE);
-        test_bits[191:168] <= playerPieces[7]  ? (kingPieces[7]  ? LIGHT_BLUE : BLUE) : (cpuPieces[7]  ? (kingPieces[7] ? LIGHT_RED : RED) : NONE);
-        test_bits[215:192] <= playerPieces[8]  ? (kingPieces[8]  ? LIGHT_BLUE : BLUE) : (cpuPieces[8]  ? (kingPieces[8] ? LIGHT_RED : RED) : NONE);
-        test_bits[239:216] <= playerPieces[9]  ? (kingPieces[9]  ? LIGHT_BLUE : BLUE) : (cpuPieces[9]  ? (kingPieces[9] ? LIGHT_RED : RED) : NONE);
-        test_bits[263:240] <= playerPieces[10] ? (kingPieces[10] ? LIGHT_BLUE : BLUE) : (cpuPieces[10] ? (kingPieces[10] ? LIGHT_RED : RED) : NONE);
-        test_bits[287:264] <= playerPieces[11] ? (kingPieces[11] ? LIGHT_BLUE : BLUE) : (cpuPieces[11] ? (kingPieces[11] ? LIGHT_RED : RED) : NONE);
-        test_bits[311:288] <= playerPieces[12] ? (kingPieces[12] ? LIGHT_BLUE : BLUE) : (cpuPieces[12] ? (kingPieces[12] ? LIGHT_RED : RED) : NONE);
-        test_bits[335:312] <= playerPieces[13] ? (kingPieces[13] ? LIGHT_BLUE : BLUE) : (cpuPieces[13] ? (kingPieces[13] ? LIGHT_RED : RED) : NONE);
-        test_bits[359:336] <= playerPieces[14] ? (kingPieces[14] ? LIGHT_BLUE : BLUE) : (cpuPieces[14] ? (kingPieces[14] ? LIGHT_RED : RED) : NONE);
-        test_bits[383:360] <= playerPieces[15] ? (kingPieces[15] ? LIGHT_BLUE : BLUE) : (cpuPieces[15] ? (kingPieces[15] ? LIGHT_RED : RED) : NONE);
-        test_bits[407:384] <= playerPieces[16] ? (kingPieces[16] ? LIGHT_BLUE : BLUE) : (cpuPieces[16] ? (kingPieces[16] ? LIGHT_RED : RED) : NONE);
-        test_bits[431:408] <= playerPieces[17] ? (kingPieces[17] ? LIGHT_BLUE : BLUE) : (cpuPieces[17] ? (kingPieces[17] ? LIGHT_RED : RED) : NONE);
-        test_bits[455:432] <= playerPieces[18] ? (kingPieces[18] ? LIGHT_BLUE : BLUE) : (cpuPieces[18] ? (kingPieces[18] ? LIGHT_RED : RED) : NONE);
-        test_bits[479:456] <= playerPieces[19] ? (kingPieces[19] ? LIGHT_BLUE : BLUE) : (cpuPieces[19] ? (kingPieces[19] ? LIGHT_RED : RED) : NONE);
-        test_bits[503:480] <= playerPieces[20] ? (kingPieces[20] ? LIGHT_BLUE : BLUE) : (cpuPieces[20] ? (kingPieces[20] ? LIGHT_RED : RED) : NONE);
-        test_bits[527:504] <= playerPieces[21] ? (kingPieces[21] ? LIGHT_BLUE : BLUE) : (cpuPieces[21] ? (kingPieces[21] ? LIGHT_RED : RED) : NONE);
-        test_bits[551:528] <= playerPieces[22] ? (kingPieces[22] ? LIGHT_BLUE : BLUE) : (cpuPieces[22] ? (kingPieces[22] ? LIGHT_RED : RED) : NONE);
-        test_bits[575:552] <= playerPieces[23] ? (kingPieces[23] ? LIGHT_BLUE : BLUE) : (cpuPieces[23] ? (kingPieces[23] ? LIGHT_RED : RED) : NONE);
-        test_bits[599:576] <= playerPieces[24] ? (kingPieces[24] ? LIGHT_BLUE : BLUE) : (cpuPieces[24] ? (kingPieces[24] ? LIGHT_RED : RED) : NONE);
-        test_bits[623:600] <= playerPieces[25] ? (kingPieces[25] ? LIGHT_BLUE : BLUE) : (cpuPieces[25] ? (kingPieces[25] ? LIGHT_RED : RED) : NONE);
-        test_bits[647:624] <= playerPieces[26] ? (kingPieces[26] ? LIGHT_BLUE : BLUE) : (cpuPieces[26] ? (kingPieces[26] ? LIGHT_RED : RED) : NONE);
-        test_bits[671:648] <= playerPieces[27] ? (kingPieces[27] ? LIGHT_BLUE : BLUE) : (cpuPieces[27] ? (kingPieces[27] ? LIGHT_RED : RED) : NONE);
-        test_bits[695:672] <= playerPieces[28] ? (kingPieces[28] ? LIGHT_BLUE : BLUE) : (cpuPieces[28] ? (kingPieces[28] ? LIGHT_RED : RED) : NONE);
-        test_bits[719:696] <= playerPieces[29] ? (kingPieces[29] ? LIGHT_BLUE : BLUE) : (cpuPieces[29] ? (kingPieces[29] ? LIGHT_RED : RED) : NONE);
-        test_bits[743:720] <= playerPieces[30] ? (kingPieces[30] ? LIGHT_BLUE : BLUE) : (cpuPieces[30] ? (kingPieces[30] ? LIGHT_RED : RED) : NONE);
-        test_bits[767:744] <= playerPieces[31] ? (kingPieces[31] ? LIGHT_BLUE : BLUE) : (cpuPieces[31] ? (kingPieces[31] ? LIGHT_RED : RED) : NONE);
+        test_bits[23:0]    <= playerPiecesRemapped[0]  ? (kingPiecesRemapped[0]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[0]  ? (kingPiecesRemapped[0] ? LIGHT_RED : RED) : NONE);
+        test_bits[47:24]   <= playerPiecesRemapped[1]  ? (kingPiecesRemapped[1]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[1]  ? (kingPiecesRemapped[1] ? LIGHT_RED : RED) : NONE);
+        test_bits[71:48]   <= playerPiecesRemapped[2]  ? (kingPiecesRemapped[2]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[2]  ? (kingPiecesRemapped[2] ? LIGHT_RED : RED) : NONE);
+        test_bits[95:72]   <= playerPiecesRemapped[3]  ? (kingPiecesRemapped[3]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[3]  ? (kingPiecesRemapped[3] ? LIGHT_RED : RED) : NONE);
+        test_bits[119:96]  <= playerPiecesRemapped[4]  ? (kingPiecesRemapped[4]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[4]  ? (kingPiecesRemapped[4] ? LIGHT_RED : RED) : NONE);
+        test_bits[143:120] <= playerPiecesRemapped[5]  ? (kingPiecesRemapped[5]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[5]  ? (kingPiecesRemapped[5] ? LIGHT_RED : RED) : NONE);
+        test_bits[167:144] <= playerPiecesRemapped[6]  ? (kingPiecesRemapped[6]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[6]  ? (kingPiecesRemapped[6] ? LIGHT_RED : RED) : NONE);
+        test_bits[191:168] <= playerPiecesRemapped[7]  ? (kingPiecesRemapped[7]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[7]  ? (kingPiecesRemapped[7] ? LIGHT_RED : RED) : NONE);
+        test_bits[215:192] <= playerPiecesRemapped[8]  ? (kingPiecesRemapped[8]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[8]  ? (kingPiecesRemapped[8] ? LIGHT_RED : RED) : NONE);
+        test_bits[239:216] <= playerPiecesRemapped[9]  ? (kingPiecesRemapped[9]  ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[9]  ? (kingPiecesRemapped[9] ? LIGHT_RED : RED) : NONE);
+        test_bits[263:240] <= playerPiecesRemapped[10] ? (kingPiecesRemapped[10] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[10] ? (kingPiecesRemapped[10] ? LIGHT_RED : RED) : NONE);
+        test_bits[287:264] <= playerPiecesRemapped[11] ? (kingPiecesRemapped[11] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[11] ? (kingPiecesRemapped[11] ? LIGHT_RED : RED) : NONE);
+        test_bits[311:288] <= playerPiecesRemapped[12] ? (kingPiecesRemapped[12] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[12] ? (kingPiecesRemapped[12] ? LIGHT_RED : RED) : NONE);
+        test_bits[335:312] <= playerPiecesRemapped[13] ? (kingPiecesRemapped[13] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[13] ? (kingPiecesRemapped[13] ? LIGHT_RED : RED) : NONE);
+        test_bits[359:336] <= playerPiecesRemapped[14] ? (kingPiecesRemapped[14] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[14] ? (kingPiecesRemapped[14] ? LIGHT_RED : RED) : NONE);
+        test_bits[383:360] <= playerPiecesRemapped[15] ? (kingPiecesRemapped[15] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[15] ? (kingPiecesRemapped[15] ? LIGHT_RED : RED) : NONE);
+        test_bits[407:384] <= playerPiecesRemapped[16] ? (kingPiecesRemapped[16] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[16] ? (kingPiecesRemapped[16] ? LIGHT_RED : RED) : NONE);
+        test_bits[431:408] <= playerPiecesRemapped[17] ? (kingPiecesRemapped[17] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[17] ? (kingPiecesRemapped[17] ? LIGHT_RED : RED) : NONE);
+        test_bits[455:432] <= playerPiecesRemapped[18] ? (kingPiecesRemapped[18] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[18] ? (kingPiecesRemapped[18] ? LIGHT_RED : RED) : NONE);
+        test_bits[479:456] <= playerPiecesRemapped[19] ? (kingPiecesRemapped[19] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[19] ? (kingPiecesRemapped[19] ? LIGHT_RED : RED) : NONE);
+        test_bits[503:480] <= playerPiecesRemapped[20] ? (kingPiecesRemapped[20] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[20] ? (kingPiecesRemapped[20] ? LIGHT_RED : RED) : NONE);
+        test_bits[527:504] <= playerPiecesRemapped[21] ? (kingPiecesRemapped[21] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[21] ? (kingPiecesRemapped[21] ? LIGHT_RED : RED) : NONE);
+        test_bits[551:528] <= playerPiecesRemapped[22] ? (kingPiecesRemapped[22] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[22] ? (kingPiecesRemapped[22] ? LIGHT_RED : RED) : NONE);
+        test_bits[575:552] <= playerPiecesRemapped[23] ? (kingPiecesRemapped[23] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[23] ? (kingPiecesRemapped[23] ? LIGHT_RED : RED) : NONE);
+        test_bits[599:576] <= playerPiecesRemapped[24] ? (kingPiecesRemapped[24] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[24] ? (kingPiecesRemapped[24] ? LIGHT_RED : RED) : NONE);
+        test_bits[623:600] <= playerPiecesRemapped[25] ? (kingPiecesRemapped[25] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[25] ? (kingPiecesRemapped[25] ? LIGHT_RED : RED) : NONE);
+        test_bits[647:624] <= playerPiecesRemapped[26] ? (kingPiecesRemapped[26] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[26] ? (kingPiecesRemapped[26] ? LIGHT_RED : RED) : NONE);
+        test_bits[671:648] <= playerPiecesRemapped[27] ? (kingPiecesRemapped[27] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[27] ? (kingPiecesRemapped[27] ? LIGHT_RED : RED) : NONE);
+        test_bits[695:672] <= playerPiecesRemapped[28] ? (kingPiecesRemapped[28] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[28] ? (kingPiecesRemapped[28] ? LIGHT_RED : RED) : NONE);
+        test_bits[719:696] <= playerPiecesRemapped[29] ? (kingPiecesRemapped[29] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[29] ? (kingPiecesRemapped[29] ? LIGHT_RED : RED) : NONE);
+        test_bits[743:720] <= playerPiecesRemapped[30] ? (kingPiecesRemapped[30] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[30] ? (kingPiecesRemapped[30] ? LIGHT_RED : RED) : NONE);
+        test_bits[767:744] <= playerPiecesRemapped[31] ? (kingPiecesRemapped[31] ? LIGHT_BLUE : BLUE) : (cpuPiecesRemapped[31] ? (kingPiecesRemapped[31] ? LIGHT_RED : RED) : NONE);
     end
     
     PWMSerializer #(

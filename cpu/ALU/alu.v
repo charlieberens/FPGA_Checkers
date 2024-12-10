@@ -44,8 +44,8 @@ module alu(
     sdr test_sdr(sdr_result, data_operandA);
     sdl test_sdl(sdl_result, data_operandA);
 
-    assign sr_result = is_down ? (sdr_result) : sur_result;
-    assign sl_result = is_down ? (sdl_result) : sul_result;
+    assign sr_result = is_down ? sdr_result : sur_result;
+    assign sl_result = is_down ? sdl_result : sul_result;
 
     assign not_result = ~data_operandA;
 

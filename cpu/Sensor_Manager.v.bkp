@@ -1,0 +1,50 @@
+module SensorManager(
+//    output reg [31:0] sensorDataOut,
+    output reg [31:0] sensorDataOut,
+    output sr_clk_wire,
+    output parallel_mode_wire,
+    input in_val,
+    input clk,
+    output reg [31:0] temp_test_val
+);
+
+reg[31:0] i, j, val_reg, val_reg_2;
+reg sclk, serial_mode;
+initial begin
+    i = 0;
+    sclk = 0;
+    val_reg = 0;
+    serial_mode = 0;
+    sensorDataOut = 0;
+    temp_test_val = 0;
+end
+always @(clk) begin
+    if(i > 10000) begin
+        sclk = ~sclk;
+        i <= 0;
+        if(j > 128) begin
+            serial_mode <= ~serial_mode;
+            j <= 0;
+        end else begin
+            j <= j + 1;
+        end
+
+        if (serial_mode && !sclk && j <= 31) begin
+            val_reg[j] <= in_val;
+        end
+        if (serial_mode && sclk && j <= 31) begin
+            val_reg_2[j] <= in_val;
+        end
+        if (!serial_mode) begin
+            sensorDataOut <= val_reg;
+            temp_test_val <= val_reg_2;
+        end
+    end else begin
+        i <= i + 1;
+    end
+end
+
+assign sr_clk_wire = sclk;
+assign parallel_mode_wire = serial_mode;
+
+endmodule

@@ -32,7 +32,9 @@ module Wrapper (
 	output JA_2,
 	input JA_3,
 	output JA_4,
-	input MoveButton
+	input JA_7,
+	input JB_1,
+	input JB_2
 );
     wire reset = 1'b0;
     wire CLK20MHZ, locked;
@@ -95,16 +97,18 @@ module Wrapper (
 		// .led(LED),
 		.sr_clk_wire(JA_1),
 		.parallel_mode_wire(JA_2),
-		.in_val(JA_3)
+		.in_val(JA_3),
+		.v1(JB_1),
+		.v2(JB_2)
 	);
-	assign LED = SW[0] ? playerBoardOut[15:0] : SW[1] ? cpuBoardOut[15:0] :  SW[2] ? kingBoardOut[15:0] : instAddr[15:0];
+	assign LED = SW[0] ? playerBoardOut[15:0] : SW[1] ? cpuBoardOut[15:0] :  SW[2] ? kingBoardOut[15:0] : SW[3] ? {sensorDataOut[7],sensorDataOut[7],sensorDataOut[7],sensorDataOut[7],sensorDataOut[7], JA_3, JA_2, JA_1, sensorDataOut[7:0]} : instAddr[15:0];
 	always @(playerBoardOut, cpuBoardOut, kingBoardOut, statusOut) begin
 		$display("%b %b %b %b", playerBoardOut, cpuBoardOut, kingBoardOut, statusOut);
 	end
 	LightController lightController(
 		.clk(clock),
 		// .clk(CLK100MHZ),
-		 .playerPieces(playerBoardOut),
+		.playerPieces(playerBoardOut),
 		.cpuPieces(cpuBoardOut),
 //		.cpuPieces(32'b00000000000000000000000000000000),
 		.kingPieces(kingBoardOut),
@@ -125,8 +129,8 @@ module Wrapper (
 		.cpuBoardOut(cpuBoardOut),
 		.kingBoardOut(kingBoardOut),
 		.statusOut(statusOut),
-		.sensorBoardIn(sensorDataOut)
-		.buttonPressIn(MoveButton)
+		.sensorBoardIn(sensorDataOut),
+		.buttonPressIn(JA_7)
 	);
 
 endmodule
