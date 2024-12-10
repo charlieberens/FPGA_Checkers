@@ -20,7 +20,7 @@ assign A_shifted[14:12] = A[11:9];
 assign A_shifted[19:16] = A[15:12];
 
 assign A_shifted[22:20] = A[19:17];
-assign A_shifted[27:24] = A[20:13];
+assign A_shifted[27:24] = A[23:20];
 
 assign A_shifted[30:28] = A[27:25];
 endmodule

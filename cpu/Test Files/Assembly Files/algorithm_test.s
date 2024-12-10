@@ -187,7 +187,7 @@ find_and_make_moves:
     find_and_make_moves_cont:
         # mask ($t5) = 0000...1
         # for i < 32:
-        #   piece ($a0) = free_pieces($t2) & mask
+        #   piece ($a0) = free_pieces($t3) & mask
         #   if piece:
         #       return piece
         #   mask = mask<<1
@@ -196,7 +196,7 @@ find_and_make_moves:
         addi $t6, $0, 32
 
         find_piece_loop:
-            and $s1, $t2, $t5
+            and $s1, $t3, $t5
             bne $s1, $0, piece_found
 
             sll $t5, $t5, 1

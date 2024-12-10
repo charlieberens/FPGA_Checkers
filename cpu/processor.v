@@ -175,7 +175,6 @@ module processor(
 
     assign alu_res_withovflow = !(ovflow_add || ovflow_addi || ovflow_sub || ovflow_mul || ovflow_div || secondIR_out[31:27] == setx) ? true_result : 32'bz;
 
-
     assign aluReg_in = secondIR_out[31:27]==jal ? pc_plus : alu_res_withovflow;
 
     register thirdIR(clock, ~stall, secondIR_out, reset, thirdIR_out);

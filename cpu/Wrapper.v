@@ -57,7 +57,7 @@ module Wrapper (
 		memAddr, memDataIn, memDataOut, RAMDataOut, sensorDataOut;
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "algorithm_test";
+	localparam INSTR_FILE = "algorithm_test_takes";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 

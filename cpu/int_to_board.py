@@ -9,7 +9,7 @@ def convert_to_board(n):
     # bin_string = unsigned_32_bit_to_binary_string(n)
     bin_string = n
     # Reverse the string so that the least significant bit is at the start
-    bin_string = bin_string
+    bin_string = bin_string[::-1]
     out = []
     for i in range(0, 32, 4):
         row = bin_string[i : i + 4]
