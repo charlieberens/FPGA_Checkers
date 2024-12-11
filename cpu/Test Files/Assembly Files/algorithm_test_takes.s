@@ -64,7 +64,6 @@ preparing_for_player_move:
     lw $t0, 1($s0)
     or $t1, $playerb, $cpub
 
-    # TODO - UNCOMMENT
     bne $t0, $t1, set_board_state_error
 
     # Clear the initialization error
@@ -119,7 +118,7 @@ waiting_for_move_loop:
         # Update the board state
         add $playerb, $v0, $0
         add $cpub, $v1, $0
-        add $kingb, $0, $0 # TODO - Implement kings
+        add $kingb, $s5, $0
 
         j do_move
 
@@ -227,9 +226,6 @@ find_and_make_moves:
     # If there are fully free moves, continue, else return
     bne $t3, $0, handle_not_jump_moves 
 
-    # TODO - Remove this for kings
-    jr $ra
-
     # If we have kings that can move backwards, do that
     # t0 = our kings
     and $t0, $kingb, $a1
@@ -264,8 +260,7 @@ find_and_make_moves:
     and $t3, $s3, $t0
     and $t3, $t3, $s4
     
-    # bne $t3, $0, king_handle_jump_moves
-    # king_handle_jump_moves:
+    bne $t3, $0, king_handle_jump_moves
 
     jr $ra
 
@@ -357,6 +352,45 @@ handle_jump_moves:
         sdr $t5, $v0, $0
         sdr $t6, $t5, $0
     jump_piece_found_post_side:
+
+    not $t5, $t5, $0
+    and $playerb, $playerb, $t5
+    or $cpub, $cpub, $t6
+
+    # Set s1 to 1 to indicate we have more grooving to do
+    addi $s1, $0, 1
+    # Specify the piece that can continue gorooving
+    add $a1, $cpub, $t6
+
+    # jal update_cpu_kings
+    j update_leds_and_return
+
+king_handle_jump_moves:
+    addi $sp, $sp, -1
+    sw $a0, 0($sp)
+
+    # my take pieces ($t5)
+    add $a0, $t5, $0
+    jal find_piece_loop
+
+    lw $a0, 0($sp)
+    addi $sp, $sp, 1
+
+    # Remove the piece from the cpu board
+    not $t5, $v0, $0
+    and $cpub, $cpub, $t5
+
+    # Add the moved piece to the cpu board, remove the taken piece from the player's board
+    bne $a0, $0, king_jump_is_right 
+    king_jump_is_left:
+        sdl $t5, $v0, $0
+        sdl $t6, $t5, $0
+
+        j king_jump_piece_found_post_side
+    king_jump_is_right:
+        sdr $t5, $v0, $0
+        sdr $t6, $t5, $0
+    king_jump_piece_found_post_side:
 
     not $t5, $t5, $0
     and $playerb, $playerb, $t5
