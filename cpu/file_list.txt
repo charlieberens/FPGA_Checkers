@@ -48,3 +48,4 @@
 ./LightController.v
 ./PWMSerializer.v
 ./Wrapper_tb_2.v
+./transform.v

@@ -19,6 +19,8 @@ reg [63:0] val_reg;
 reg has_been_released;
 reg BTNC;
 
+wire [31:0] temp_sensor_data_out;
+
 initial begin
     sr_clk = 1'b0;
     parallel_mode = 1'b0;
@@ -61,11 +63,14 @@ always @(posedge sr_clk) begin
     end
 end
 
-//assign sensorDataOut[30:5] = ~val_reg[30:5];
-//assign sensorDataOut[3:0] = ~val_reg[3:0];
+assign temp_sensor_data_out[31:28] = ~val_reg[31:28];
+assign temp_sensor_data_out[26:0] = ~val_reg[26:0];
 //assign sensorDataOut[4] = ~v1;
-//assign sensorDataOut[31] = ~v2;
-assign sensorDataOut = val_reg[31:0];
+assign temp_sensor_data_out[27] = 1'b1;
+//assign sensorDataOut = val_reg[31:0];
+
+transform trans_d(temp_sensor_data_out, sensorDataOut);
+
 assign sr_clk_wire = sr_clk;
 assign parallel_mode_wire = parallel_mode;
 endmodule

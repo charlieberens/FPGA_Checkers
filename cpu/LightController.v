@@ -7,24 +7,9 @@ module LightController(
 );
     wire [31:0] playerPiecesRemapped, cpuPiecesRemapped, kingPiecesRemapped;
 
-    // assign playerPiecesRemapped[7:4] = {playerPieces[4], playerPieces[5], playerPieces[6], playerPieces[7]};
-    // assign playerPiecesRemapped[15:12] = {playerPieces[12], playerPieces[13], playerPieces[14], playerPieces[15]};
-    // assign playerPiecesRemapped[23:20] = {playerPieces[20], playerPieces[21], playerPieces[22], playerPieces[23]};
-    // assign playerPiecesRemapped[31:28] = {playerPieces[28], playerPieces[29], playerPieces[30], playerPieces[31]};
-
-    // assign cpuPiecesRemapped[7:4] = {cpuPieces[4], cpuPieces[5], cpuPieces[6], cpuPieces[7]};
-    // assign cpuPiecesRemapped[15:12] = {cpuPieces[12], cpuPieces[13], cpuPieces[14], cpuPieces[15]};
-    // assign cpuPiecesRemapped[23:20] = {cpuPieces[20], cpuPieces[21], cpuPieces[22], cpuPieces[23]};
-    // assign cpuPiecesRemapped[31:28] = {cpuPieces[28], cpuPieces[29], cpuPieces[30], cpuPieces[31]};
-
-    // assign kingPiecesRemapped[7:4] = {kingPieces[4], kingPieces[5], kingPieces[6], kingPieces[7]};
-    // assign kingPiecesRemapped[15:12] = {kingPieces[12], kingPieces[13], kingPieces[14], kingPieces[15]};
-    // assign kingPiecesRemapped[23:20] = {kingPieces[20], kingPieces[21], kingPieces[22], kingPieces[23]};
-    // assign kingPiecesRemapped[31:28] = {kingPieces[28], kingPieces[29], kingPieces[30], kingPieces[31]};
-
-    assign playerPiecesRemapped = playerPieces;
-    assign cpuPiecesRemapped = cpuPieces;
-    assign kingPiecesRemapped = kingPieces;
+    transform trans_a(playerPieces, playerPiecesRemapped);
+    transform trans_b(cpuPieces, cpuPiecesRemapped);
+    transform trans_c(kingPieces, kingPiecesRemapped);
 
     // Fixed Duty Cycle for 0.9/1.25 ratio (approximately 737/1023)
     // localparam DUTY_CYCLE = 10'd737;

@@ -43,23 +43,27 @@ module Wrapper_tb_2 #(parameter FILE = "nop");
 
 	wire [15:0] LED;
 	wire [15:0] sw;
-	wire JA_1, JA_2, JA_3, JA_4, JA_5;
+	wire JA_1, JA_2, JA_3, JA_4, JA_5, JA_7, JB_1, JB_2, JB_3, JB_4;
 	wire fake_clock;
 
 	Wrapper wrapper(
 		clock,
 		fake_clock,
-		LED,
 		sw,
+		LED,
 		JA_1,
 		JA_2,
 		JA_3,
 		JA_4,
-		JA_5
+		JA_7,
+		JB_1,
+		JB_2,
+		JB_3,
+		JB_4
 	);
 
 	initial begin
-		#10000;
+		#100000;
 		$finish;
 	end
 endmodule

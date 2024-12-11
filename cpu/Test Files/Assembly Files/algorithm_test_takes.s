@@ -44,19 +44,17 @@ initialize_cpu_pieces:
 
     # addi $playerb, $0, 257
     # sll $playerb, $playerb, 13
-    # addi $playerb, $0, 4095
-    # sll $playerb, $playerb, 20
     
-    # addi $cpub, $0, 4095
+    addi $cpub, $0, 4095
 
     addi $playerb, $0, 4095
     sll $playerb, $playerb, 20
     
-    addi $cpub, $0, 4095
-    
     addi $kingb, $0, 0
 
     jal update_leds
+
+    add $a1, $cpub, $0 
     j waiting_for_move_loop
 
 preparing_for_player_move:
@@ -67,13 +65,14 @@ preparing_for_player_move:
     or $t1, $playerb, $cpub
 
     # TODO - UNCOMMENT
-    # bne $t0, $t1, set_board_state_error
+    bne $t0, $t1, set_board_state_error
 
     # Clear the initialization error
     sw $0, 0($s0)
 
     # Wait for move - This is not a repeat move
     addi $s1, $0, 0
+    add $a1, $cpub, $0 
     j waiting_for_move_loop
 
 set_board_state_error:
@@ -89,22 +88,31 @@ set_board_state_error:
 partial_move_made:
     # Check to see if this move needs to continue (was just a take)
     bne $s1, $0, preparing_for_player_move
-    j do_move
+    j preparing_for_player_move
 waiting_for_move_loop:
     # j do_move
 
     # Get updated pieces
     jal get_updated_board_from_sensor_reading
     
+    addi $sp, $sp, -3
+    sw $a0, 0($sp)
+    sw $a1, 1($sp)
+    sw $a2, 2($sp)
     # Update the leds
     add $a0, $v0, $0
     add $a1, $v1, $0
     add $a2, $s5, $0
     jal update_leds_w_args
 
+    lw $a0, 0($sp)
+    lw $a1, 1($sp)
+    lw $a2, 2($sp)
+    addi $sp, $sp, 3
+
     # Check if the button is pressed
-    # lw $t0, 5($s0)
-    # bne $t0, $0, waiting_for_move_loop_button_has_been_pressed
+    lw $t0, 5($s0)
+    bne $t0, $0, waiting_for_move_loop_button_has_been_pressed
     j waiting_for_move_loop
 
     waiting_for_move_loop_button_has_been_pressed:
@@ -118,22 +126,22 @@ waiting_for_move_loop:
 # This will find cpub_new and playerb_new based on a sensor reading returns (playerb_new, cpub_new)
 get_updated_board_from_sensor_reading:
     # Player pieces = sensor_reading & ~cpub
-    lw $t0, 1($s0)
+    lw  $t0, 1($s0)
     add $t1, $playerb, $0 
     add $t2, $cpub, $0
     not $t3, $cpub, $0
     and $v0, $t0, $t3
 
     # Remove all places with no pieces
-    and $v0, $v0, $t0 
+    and $v0, $v0, $t0
 
     # Eliminate all cpub pieces that are no longer present
     and $v1, $cpub, $t0 
 
     # Update player kings
-    addi $t0, $0, 15
-    and $t0, $t0, $a0
-    or $s5, $kingb, $t0
+    # addi $t0, $0, 15
+    # and $t0, $t0, $a0
+    # or $s5, $kingb, $t0
 
     jr $ra
 
@@ -141,8 +149,8 @@ get_updated_board_from_sensor_reading:
 # Find pieces that could theoretically move down left
 ##########################################
 do_move:
-    # Load player pieces in to $r24
-    lw $playerb, 2($s0)
+    # Load player pieces into $r24
+    # lw $playerb, 2($s0)
 
     ### Find and make any left moves
     ## Set Arguments
@@ -209,15 +217,18 @@ find_and_make_moves:
 
     # my_take_pieces ($t5) = my_semi_opp_obstruct_pieces ($t4) & ~my_fully_opp_obstruct_pieces ($t5)
     not $t5, $t5, $0
-    and $t5, $t5, $t4
+    and $t5, $t5, $t4    
 
     bne $t5, $0, handle_jump_moves
 
     # If we are in a continuing type mood, and we aren't doing jump moves, end the turn
-    bne $s0, $0, go_to_ra
+    bne $s1, $0, go_to_ra
 
     # If there are fully free moves, continue, else return
     bne $t3, $0, handle_not_jump_moves 
+
+    # TODO - Remove this for kings
+    jr $ra
 
     # If we have kings that can move backwards, do that
     # t0 = our kings
@@ -253,7 +264,8 @@ find_and_make_moves:
     and $t3, $s3, $t0
     and $t3, $t3, $s4
     
-    bne $t3, $0, king_handle_jump_moves
+    # bne $t3, $0, king_handle_jump_moves
+    # king_handle_jump_moves:
 
     jr $ra
 
@@ -293,27 +305,30 @@ handle_not_jump_moves:
 
     jal find_piece_loop
 
+    lw $a0, 0($sp)
+    addi $sp, $sp, 1
+
     # Remove the piece from the cpu board
     not $t5, $v0, $0
     and $cpub, $cpub, $t5
 
     # Add the moved piece to the cpu board
-    bne $a0, $0, is_right 
-    is_left:
+    bne $a0, $0, reg_is_right 
+    reg_is_left:
         sdl $t5, $v0, $0
-        j piece_found_post_side
-    is_right:
+        j reg_piece_found_post_side
+    reg_is_right:
         sdr $t5, $v0, $0
-    piece_found_post_side:
+    reg_piece_found_post_side:
     or $cpub, $cpub, $t5
 
     # Store the piece that moved in a1
 
-
-    jal update_cpu_kings
+    # jal update_cpu_kings
 
     # Set s1 to 0 to indicate we have no more grooving to do
     addi $s1, $0, 0
+    add $a1, $cpub, $0 
     j update_leds_and_return
 
 handle_jump_moves:
@@ -332,16 +347,16 @@ handle_jump_moves:
     and $cpub, $cpub, $t5
 
     # Add the moved piece to the cpu board, remove the taken piece from the player's board
-    bne $a0, $0, is_right 
-    is_left:
+    bne $a0, $0, jump_is_right 
+    jump_is_left:
         sdl $t5, $v0, $0
         sdl $t6, $t5, $0
 
-        j piece_found_post_side
-    is_right:
+        j jump_piece_found_post_side
+    jump_is_right:
         sdr $t5, $v0, $0
         sdr $t6, $t5, $0
-    piece_found_post_side:
+    jump_piece_found_post_side:
 
     not $t5, $t5, $0
     and $playerb, $playerb, $t5
@@ -349,8 +364,10 @@ handle_jump_moves:
 
     # Set s1 to 1 to indicate we have more grooving to do
     addi $s1, $0, 1
+    # Specify the piece that can continue gorooving
+    add $a1, $cpub, $t6
 
-    jal update_cpu_kings
+    # jal update_cpu_kings
     j update_leds_and_return
 
 update_leds:
@@ -375,14 +392,16 @@ update_cpu_kings:
     # kings_that_moved_new_space = shifted(kings_that_moved)
     and $t1, $a1, $kingb
     
-    update_cpu_
     bne $a0, $0, cpu_kings_is_right 
     cpu_kings_is_left:
-        sdl $t5, $v0, $0
-        j piece_found_post_side
+        sdl $t2, $t1, $0
+        j cpu_kings_post_side
     cpu_kings_is_right:
-        sdr $t5, $v0, $0
+        sdr $t2, $a1, $0
     cpu_kings_post_side:
+    or $kingb, $kingb, $t2
+    not $t1, $t1, $0
+    and $kingb, $t1, $kingb
 
     # Add new kings 
     addi $t0, $0, 15

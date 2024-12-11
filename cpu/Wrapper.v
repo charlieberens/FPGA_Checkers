@@ -32,9 +32,11 @@ module Wrapper (
 	output JA_2,
 	input JA_3,
 	output JA_4,
-	input JA_7,
+	input JC_1,
 	input JB_1,
-	input JB_2
+	input JB_2,
+	output JB_3,
+	output JB_4
 );
     wire reset = 1'b0;
     wire CLK20MHZ, locked;
@@ -90,13 +92,15 @@ module Wrapper (
 		.ctrl_readRegA(rs1), .ctrl_readRegB(rs2), 
 		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB));
 	
+	assign JB_4 = SW[15];
+	
 	wire[31:0] playerBoardOut, cpuBoardOut, kingBoardOut, statusOut;
 	SensorManager sensorManager(
 		.sensorDataOut(sensorDataOut),
 		.clk(clock),
 		// .led(LED),
 		.sr_clk_wire(JA_1),
-		.parallel_mode_wire(JA_2),
+		.parallel_mode_wire(JB_3),
 		.in_val(JA_3),
 		.v1(JB_1),
 		.v2(JB_2)
@@ -108,13 +112,14 @@ module Wrapper (
 	LightController lightController(
 		.clk(clock),
 		// .clk(CLK100MHZ),
+//		.playerPieces(sensorDataOut),
 		.playerPieces(playerBoardOut),
 		.cpuPieces(cpuBoardOut),
-//		.cpuPieces(32'b00000000000000000000000000000000),
+//		  .cpuPieces(32'b00000000000000000000000000000000),
 		.kingPieces(kingBoardOut),
-//		.playerPieces(32'b00110000000000000000010000000000),
+//		  .playerPieces(32'b11111111111111111111111111111111),
 //		.cpuPieces(32'b0),
-//		.kingPieces(32'b00000000000000000000000000000000),
+//		  .kingPieces(32'b00000000000000000000000000000000),
 		.out(JA_4)
 	);
 
@@ -130,7 +135,7 @@ module Wrapper (
 		.kingBoardOut(kingBoardOut),
 		.statusOut(statusOut),
 		.sensorBoardIn(sensorDataOut),
-		.buttonPressIn(JA_7)
+		.buttonPressIn(JC_1)
 	);
 
 endmodule
